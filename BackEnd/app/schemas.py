@@ -1,0 +1,1 @@
+# Schemas.py file is for PYDANTIC models which is basically data validation for API requests and responses

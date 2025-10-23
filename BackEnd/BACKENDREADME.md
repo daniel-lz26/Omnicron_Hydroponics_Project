@@ -5,7 +5,8 @@ cd OMNICRON_hydroponic_PROJECT/BackEnd
 # 2. Create virtual environment
 python -m venv venv
 source venv/bin/activate  # or venv\Scripts\activate
-
+Notes:
+Bash script to apply the dep to the py env
 # 3. Install dependencies
 pip install -r requirements.txt
 
