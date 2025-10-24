@@ -17,7 +17,7 @@ supabase-functions==2.22.1
 
 # Database ORM (optional, if using SQLAlchemy with Supabase)
 SQLAlchemy==2.0.35
-psycopg2-binary==2.9.9  # PostgreSQL adapter for macOS/Linux
+psycopg2-binary==2.9.10  # PostgreSQL adapter for macOS/Linux
 # OR use asyncpg for async operations
 # asyncpg==0.29.0
 
