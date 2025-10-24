@@ -1,11 +1,10 @@
-/* Main Page */
 body {
     background: #cbc5b9;
     margin: 0;
     padding: 0;
 }
 
-/* Top Page Design */
+
 .header-background {
     background-image: url('Images/background.gif');
     background-size: cover;
@@ -39,7 +38,7 @@ body {
     color: #2a251f;
 }
 
-/* Nav Bar */
+
 .navbar {
   display: flex;
   justify-content: center;
@@ -59,7 +58,7 @@ body {
     box-shadow: 0 0 0px 2px #85806e;
 }
 
-/* Chart Data Design */
+
 #gaugeChart, #lineChart {
   width: 500px;
   height: 300px;
@@ -75,7 +74,7 @@ body {
   width: fit-content;
 }
 
-/* Fonts */
+
 @font-face {
   font-family: 'Pixel1';
   src: url('Fonts/pixel1.ttf') format('truetype');
@@ -86,7 +85,7 @@ body {
   src: url('Fonts/espresso.otf') format('truetype');
 }
 
-/* Animations */
+
 @keyframes float {
     0%   { transform: translateY(0); }
     50%  { transform: translateY(-5px); }
