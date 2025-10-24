@@ -11,49 +11,47 @@ pip - Python package installer (comes with Python)
 Step-by-Step Installation
 1. Clone the Repository
 First, download the project code from GitHub to your local machine:
-bashgit clone github link
+     git clone github link
 cd OMNICRON_hydroponic_PROJECT/BackEnd
 
 2. Create a Virtual Environment
 A virtual environment keeps your project dependencies isolated from other Python projects on your system.
 On macOS/Linux:
- ~python -m venv venv
-source venv/bin/activate
+     python -m venv venv
+    source venv/bin/activate
 On Windows:
-~python -m venv venv
-venv\Scripts\activate
+    python -m venv venv
+    venv\Scripts\activate
 You'll know the virtual environment is activated when you see (venv) at the beginning of your command prompt.
 
 3. Install Project Dependencies
 Install all required Python packages listed in the requirements.txt file:
-bashpip install -r requirements.txt
+    pip install -r requirements.txt
 IF YOU ARE ON MAC OR LINUX
-bash pip install -r requirements-mac.txt
+     pip install -r requirements-mac.txt
 This will install FastAPI, Uvicorn, database drivers, and other necessary libraries.
 Tip: If you encounter permission errors, try using pip install --user -r requirements.txt
 
 4. Configure Environment Variables
 The application uses environment variables for sensitive configuration like database connections and secret keys.
 Copy the example environment file:
-bashcp .env.example .env
+    cp .env.example .env
 On Windows, use:
-bashcopy .env.example .env
+    copy .env.example .env
 On MAC or LINUX
-cp .env.example .env
+    cp .env.example .env
 Edit the .env file:
-bashnano .env  # or use your preferred text editor (vim, code, notepad, etc.)
+hnano .env  # or use your preferred text editor (vim, code, notepad, etc.)
 Required Configuration:
 
 SECRET_KEY - Generate a secure random string for JWT token encryption
 
 You can generate one using: openssl rand -hex 32
 
-
 DATABASE_URL - Your database connection string (if not already configured)
 
 Example: postgresql://user:password@localhost:5432/hydroponics_db
-
-
+ 
 
 Example .env file:
 envSECRET_KEY=your-super-secret-key-here-change-this
@@ -62,7 +60,7 @@ DEBUG=True
 
 5. Run the Development Server
 Start the FastAPI application with auto-reload enabled (automatically restarts when you make code changes):
-bashuvicorn app.main:app --reload
+    uvicorn app.main:app --reload
 The server will start on: http://127.0.0.1:8000
 Access the interactive API documentation:
 

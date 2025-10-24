@@ -1,4 +1,3 @@
-# Daniel Lopez worked on this
 # imports all the libraries and sets up the database connection
 import os
 from sqlalchemy import create_engine
@@ -22,6 +21,8 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
 # Ddpendency function to get database session
+
+
 def get_db():
     db = SessionLocal()
     try:
