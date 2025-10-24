@@ -11,12 +11,12 @@ Base = declarative_base()
 # creates base that all models will inherit from, connects python classes to actual database tables
 
 
-class SensorReading(Base):
-    __tablename__ = "sensor_readings"
+class ProbeReading(Base):
+    __tablename__ = "probe_readings"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
 
-    water_level = Column(Float, nullable=False)
+    water_level = Column(bool, nullable=False)
     nutrient_level = Column(Float, nullable=False)
-    ph_level = Column(Float, nullable=True)
-    timestamp = Column(DateTime, default=datetime.utcnow, nullable=False)
+    ph_level = Column(Float, nullable=False)
+    timestamp = Column(DateTime, default=DateTime.utcnow, nullable=False)
