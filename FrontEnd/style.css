@@ -1,0 +1,94 @@
+/* Main Page */
+body {
+    background: #cbc5b9;
+    margin: 0;
+    padding: 0;
+}
+
+/* Top Page Design */
+.header-background {
+    background-image: url('Images/background.gif');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center 75%;
+    border-bottom: 5px solid #2a251f;
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.dashboard-title {
+    font-family: 'Pixel1';
+    font-size: 2.5em;
+    text-align: center;
+    margin-top: 1em;
+    transform: translateX(-50%);
+    animation: float 2s ease-in-out infinite;
+    text-shadow: 0 0 10px #ffffff, 0 0 10px #ffffff;
+    color: #2a251f;
+}
+
+.dashboard-subtitle {
+    font-family: 'espresso';
+    text-align: center;
+    margin-top: -0.5em;
+    letter-spacing: 0.2em;
+    text-shadow: 0 0 10px #ffffff, 0 0 10px #ffffff;
+    color: #2a251f;
+}
+
+/* Nav Bar */
+.navbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  width: 100vw;
+  margin-top: 10px;
+}
+
+.navbar button {
+    font-family: 'espresso';
+    border: none;
+    box-shadow: none;
+    border-radius: 10px;
+    display: flex;
+    margin-top: 10px;
+    box-shadow: 0 0 0px 2px #85806e;
+}
+
+/* Chart Data Design */
+#gaugeChart, #lineChart {
+  width: 500px;
+  height: 300px;
+  margin: 20px auto;
+}
+
+.chart-container {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 0px 5px #85806e;
+  padding: 20px;
+  margin: 20px auto;
+  width: fit-content;
+}
+
+/* Fonts */
+@font-face {
+  font-family: 'Pixel1';
+  src: url('Fonts/pixel1.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Espresso';
+  src: url('Fonts/espresso.otf') format('truetype');
+}
+
+/* Animations */
+@keyframes float {
+    0%   { transform: translateY(0); }
+    50%  { transform: translateY(-5px); }
+    100% { transform: translateY(0); }
+}
