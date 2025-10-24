@@ -12,8 +12,8 @@ supabase==2.9.1
 postgrest==0.17.2
 storage3==0.8.1
 realtime==2.0.5
-supabase-auth==2.8.4
-supabase-functions==2.5.1
+supabase-auth==2.9.1
+supabase-functions==2.22.1
 
 # Database ORM (optional, if using SQLAlchemy with Supabase)
 SQLAlchemy==2.0.35
