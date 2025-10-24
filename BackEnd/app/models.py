@@ -8,7 +8,7 @@ from sqlalchemy.ext.declarative import declarative_base
 # tool that collects data in real time and saves it
 
 Base = declarative_base()
-# creates base that all models will inherit from, connects python classes to actual database tables
+# creates base that all models will build upon, connects python classes to actual database tables
 
 
 class SensorReading(Base):
@@ -18,5 +18,5 @@ class SensorReading(Base):
 
     water_level = Column(Float, nullable=False)
     nutrient_level = Column(Float, nullable=False)
-    ph_level = Column(Float, nullable=True)
-    timestamp = Column(DateTime, default=datetime.utcnow, nullable=False)
+    ph_level = Column(Float, nullable=False)
+    timestamp = Column(DateTime, default=DateTime.utcnow, nullable=False)
