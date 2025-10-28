@@ -37,6 +37,7 @@ html, body {
     font-family: 'espresso';
     text-align: center;
     margin-top: -0.5em;
+    margin-bottom: 2em;
     letter-spacing: 0.2em;
     text-shadow: 0 0 10px #ffffff, 0 0 10px #ffffff;
     color: #2a251f;
@@ -60,6 +61,13 @@ html, body {
     display: flex;
     margin-top: 10px;
     box-shadow: 0 0 0px 2px #85806e;
+    transition: transform 0.2s ease;
+}
+
+.navbar button:hover {
+  background: #869170;
+  color: white;
+  transform: scale(1.1);
 }
 
 
