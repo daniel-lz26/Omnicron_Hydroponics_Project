@@ -4,6 +4,10 @@ body {
     padding: 0;
 }
 
+html, body {
+  overscroll-behavior: none;
+}
+
 
 .header-background {
     background-image: url('Images/background.gif');

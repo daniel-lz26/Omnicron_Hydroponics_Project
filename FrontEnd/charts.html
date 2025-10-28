@@ -13,18 +13,23 @@
 
 
      <nav class="navbar">
-        <button>Home</button>
-        <button>Analytics</button>
+        <button id="home-button">Home</button>
+        <button id="about-button">About</button>
+        <button id="analytics-button">Analytics</button>
+        <button id="links-button">Links</button>
      </nav>
 
 
-     <div class="chart-container">
+     <div id="analytics-section" style="display: none;">
+      <div class="chart-container">
         <div id="gaugeChart"></div>
      </div>
 
      <div class="chart-container">
         <div id="lineChart"></div> 
      </div>
+     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
     <script src="script.js"></script>
   </body>
