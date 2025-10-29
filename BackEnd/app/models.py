@@ -6,7 +6,8 @@ from sqlalchemy import Column, Integer, Float, DateTime, String
 # imports a tool that creates a base template for all models
 from sqlalchemy.ext.declarative import declarative_base
 # tool that collects data in real time and saves it
-
+from sqlalchemy.sql import func
+from database import Base
 Base = declarative_base()
 # creates base that all models will build upon, connects python classes to actual database tables
 
@@ -16,7 +17,8 @@ class ProbeReading(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
 
-    water_level = Column(bool, nullable=False)
+    water_level = Column(Float, nullable=False)
     nutrient_level = Column(Float, nullable=False)
     ph_level = Column(Float, nullable=False)
-    timestamp = Column(DateTime, default=DateTime.utcnow, nullable=False)
+    timestamp = Column(DateTime(timezone=True),
+                       server_default=func.now, nullable=False)
