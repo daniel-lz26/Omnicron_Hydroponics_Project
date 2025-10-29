@@ -1,105 +1,72 @@
-body {
-    background: #cbc5b9;
+* {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
-html, body {
-  overscroll-behavior: none;
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    background-color: black;
+    color: white;
+    min-height: 100vh;
+    line-height: 1.5;
 }
 
-
-.header-background {
-    background-image: url('Images/background.gif');
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center 75%;
-    border-bottom: 5px solid #2a251f;
-    height: 150px;
+.container {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
 }
 
-.dashboard-title {
-    font-family: 'Pixel1';
-    font-size: 2.5em;
-    text-align: center;
-    margin-top: 1em;
-    transform: translateX(-50%);
-    animation: float 2s ease-in-out infinite;
-    text-shadow: 0 0 10px #ffffff, 0 0 10px #ffffff;
-    color: #2a251f;
-}
-
-.dashboard-subtitle {
-    font-family: 'espresso';
-    text-align: center;
-    margin-top: -0.5em;
-    margin-bottom: 2em;
-    letter-spacing: 0.2em;
-    text-shadow: 0 0 10px #ffffff, 0 0 10px #ffffff;
-    color: #2a251f;
-}
-
-
-.navbar {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 40px;
-  width: 100vw;
-  margin-top: 10px;
-}
-
-.navbar button {
-    font-family: 'espresso';
-    border: none;
-    box-shadow: none;
-    border-radius: 10px;
+header {
     display: flex;
-    margin-top: 10px;
-    box-shadow: 0 0 0px 2px #85806e;
-    transition: transform 0.2s ease;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 5rem;
 }
 
-.navbar button:hover {
-  background: #869170;
-  color: white;
-  transform: scale(1.1);
+header h1 {
+    margin: 0;
+    font-size: 3rem;
+    font-weight: 300;
 }
 
+.subtitle {
+    font-size: 0.8rem;
+    font-family: 'Ashton', Arial, sans-serif;
+    color: white;
+    margin-top: -1.5em;
+    text-align: center;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    gap: 70px;
+}
+
+nav a {
+    font-size: .8rem;
+    letter-spacing: 0.1rem;
+    transition: color 0.2s ease;
+    text-decoration: none;
+    color: inherit;
+    margin-top: 1em;
+}
+
+nav a:hover {
+    color: white;
+}
 
 #gaugeChart, #lineChart {
-  width: 500px;
+  width: 600px;
   height: 300px;
-  margin: 20px auto;
-}
-
-.chart-container {
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 0 0px 5px #85806e;
-  padding: 20px;
-  margin: 20px auto;
-  width: fit-content;
-}
-
-
-@font-face {
-  font-family: 'Pixel1';
-  src: url('Fonts/pixel1.ttf') format('truetype');
+  margin: 2em auto;
 }
 
 @font-face {
-  font-family: 'Espresso';
-  src: url('Fonts/espresso.otf') format('truetype');
-}
-
-
-@keyframes float {
-    0%   { transform: translateY(0); }
-    50%  { transform: translateY(-5px); }
-    100% { transform: translateY(0); }
+  font-family: 'Ashton';
+  src: url('Fonts/ashton.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
 }

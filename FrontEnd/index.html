@@ -1,37 +1,32 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Hydroponic Dashboard</title>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
     <link rel="stylesheet" href="style.css">
-  </head>
-  <body>
+</head>
+<body>
+   <div class="container">
+      <header>
+         <h1 class="logo">HYDROPONIC GARDEN SYSTEM</h1>
+      </header>
+      <p class="subtitle">Omicron Class</p>
+      <nav>
+         <a href="#">HOME</a>
+         <a href="#">USER MANUAL</a>
+         <a href="#">ANALYTICS</a>
+         <a href="#">ABOUT US</a>
+      </nav>
+   </div>
 
-     <div class="header-background">
-        <h1 class="dashboard-title">Hydroponic Garden System Dashboard</h1>
-        <p class="dashboard-subtitle">Omicron class Fall 2025</p>
-     </div>
+   <div id="analytics-section" style="display: block;">
+      <div id="gaugeChart"></div>
+      <div id="lineChart"></div> 
+   </div>
 
-
-     <nav class="navbar">
-        <button id="home-button">Home</button>
-        <button id="about-button">About</button>
-        <button id="analytics-button">Analytics</button>
-        <button id="links-button">Links</button>
-     </nav>
-
-
-     <div id="analytics-section" style="display: none;">
-      <div class="chart-container">
-        <div id="gaugeChart"></div>
-     </div>
-
-     <div class="chart-container">
-        <div id="lineChart"></div> 
-     </div>
-     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
-    <script src="charts.js"></script>
-    <script src="main.js"></script>
-  </body>
+   <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+   <script src="charts.js"></script>
+   <script src="main.js"></script>
+</body>
 </html>
