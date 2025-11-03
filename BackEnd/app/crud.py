@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from models import ProbeReading
 from schemas import ProbeReadingCreate
+from datetime import datetime, timedelta
 # File is for Database functions
 
 # C - create
@@ -52,7 +53,7 @@ def get_readings_by_date_range(db: Session, startDate: datetime, endDate: dateti
 
 
 def get_low_ph_readings(db: Session, ph_thresh: float = 6.5, limit: int = 10):
-    return db.query(ProbeReading).ph_level(  # gets the ph levels from the data base
+    return db.query(ProbeReading).filter(  # gets the ph levels from the data base
         # return if the ph level is less than the ph threshold
         ProbeReading.ph_level <= ph_thresh
         # order by time and shows 10 rows
@@ -125,3 +126,43 @@ def update_reading(db: Session, reading_id: int, water_level: float = None, nutr
 
         # STATS
         # for functions like average ph, tds, etc
+        def get_average_ph(db: Session, hours: int = 24):
+            cutoff_time = datetime.now() - timedelta(hours=hours)
+            result = db.query(func.avg(ProbeReading.ph_level)).filter(
+                ProbeReading.timestamp >= cutoff_time
+            ).scalar()
+            return round(result, 2) if result else None
+
+        def get_average_nutrient_level(db: Session, hours: int = 24):
+            cutoff_time = datetime.now() - timedelta(hours=hours)
+            result = db.query(func.avg(ProbeReading.nutrient_level)).filter(
+                ProbeReading.timestamp >= cutoff_time
+            ).scalar()
+            return round(result, 2) if result else None
+
+        def get_average_water_level(db: Session, hours: int = 24):
+            cutoff_time = datetime.now() - timedelta(hours=hours)
+            result = db.query(func.avg(ProbeReading.water_level)).filter(
+                ProbeReading.timestamp >= cutoff_time
+            ).scalar()
+            return round(result, 2) if result else None
+
+        def get_min_max_stats(db: Session, hours: int = 24):
+            cutoff_time = datetime.now() - timedelta(hours=hours)
+            stats = db.query(
+                func.min(ProbeReading.ph_level).label("min_ph"),
+                func.max(ProbeReading.ph_level).label("max_ph"),
+                func.max(ProbeReading.water_level).label("min_water"),
+                func.max(ProbeReading.water_level).label("max_water"),
+                func.min(ProbeReading.nutrient_level).label("min_nutrient"),
+                func.max(ProbeReading.nutrient_level).label("max_nutrient"),
+            ).filter(
+                ProbeReading.timestamp >= cutoff_time
+            ).first()
+            if not stats:
+                return None
+            return {
+                "ph": {"min": round(stats.min_ph, 2), "max": round(stats.max_ph, 2)},
+                "water_level": {"min": round(stats.min_water, 2), "max": round(stats.max_water, 2)},
+                "nutrient_level": {"min": round(stats.min_nutrient, 2), "max": round(stats.max_nutrient, 2)}
+            }
