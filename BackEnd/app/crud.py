@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 from models import ProbeReading
 from schemas import ProbeReadingCreate
 from datetime import datetime, timedelta
@@ -101,68 +102,68 @@ def update_reading(db: Session, reading_id: int, water_level: float = None, nutr
     # DELETE FUNCTIONS
     # we wanna delete rows and old rows after a ceratin day because we cant hold old data forever
 
-    def delete_reading(db: Session, reading_id: int):
-        # deletes reading by specific id
-        # returns true if deleted, false if not found
-        reading = db.query(ProbeReading).filter(
-            ProbeReading.id == reading_id).first()
-        if not reading:
-            return False
-        db.delete(reading)
-        db.commit()
-        return True
+def delete_reading(db: Session, reading_id: int):
+    # deletes reading by specific id
+    # returns true if deleted, false if not found
+    reading = db.query(ProbeReading).filter(
+        ProbeReading.id == reading_id).first()
+    if not reading:
+        return False
+    db.delete(reading)
+    db.commit()
+    return True
     # removes a single reading from the database
 
-    def delete_old_readings(db: Session, days_to_keep: int = 30):
-        # deletes readings older than specified days_to_keep
-        # default keeps last 30 days of data
-        # returns number of readings deleted
-        cutoff_date = datetime.now() - timedelta(days=days_to_keep)
-        deleted_count = db.query(ProbeReading).filter(
-            ProbeReading.timestamp < cutoff_date
-        ).delete()
-        db.commit()
-        return deleted_count
+def delete_old_readings(db: Session, days_to_keep: int = 30):
+    # deletes readings older than specified days_to_keep
+    # default keeps last 30 days of data
+    # returns number of readings deleted
+    cutoff_date = datetime.now() - timedelta(days=days_to_keep)
+    deleted_count = db.query(ProbeReading).filter(
+        ProbeReading.timestamp < cutoff_date
+    ).delete()
+    db.commit()
+    return deleted_count
 
-        # STATS
-        # for functions like average ph, tds, etc
-        def get_average_ph(db: Session, hours: int = 24):
-            cutoff_time = datetime.now() - timedelta(hours=hours)
-            result = db.query(func.avg(ProbeReading.ph_level)).filter(
-                ProbeReading.timestamp >= cutoff_time
-            ).scalar()
-            return round(result, 2) if result else None
+    # STATS
+    # for functions like average ph, tds, etc
+def get_average_ph(db: Session, hours: int = 24):
+        cutoff_time = datetime.now() - timedelta(hours=hours)
+        result = db.query(func.avg(ProbeReading.ph_level)).filter(
+            ProbeReading.timestamp >= cutoff_time
+        ).scalar()
+        return round(result, 2) if result else None
 
-        def get_average_nutrient_level(db: Session, hours: int = 24):
-            cutoff_time = datetime.now() - timedelta(hours=hours)
-            result = db.query(func.avg(ProbeReading.nutrient_level)).filter(
-                ProbeReading.timestamp >= cutoff_time
-            ).scalar()
-            return round(result, 2) if result else None
+def get_average_nutrient_level(db: Session, hours: int = 24):
+        cutoff_time = datetime.now() - timedelta(hours=hours)
+        result = db.query(func.avg(ProbeReading.nutrient_level)).filter(
+            ProbeReading.timestamp >= cutoff_time
+        ).scalar()
+        return round(result, 2) if result else None
 
-        def get_average_water_level(db: Session, hours: int = 24):
-            cutoff_time = datetime.now() - timedelta(hours=hours)
-            result = db.query(func.avg(ProbeReading.water_level)).filter(
-                ProbeReading.timestamp >= cutoff_time
-            ).scalar()
-            return round(result, 2) if result else None
+def get_average_water_level(db: Session, hours: int = 24):
+        cutoff_time = datetime.now() - timedelta(hours=hours)
+        result = db.query(func.avg(ProbeReading.water_level)).filter(
+            ProbeReading.timestamp >= cutoff_time
+        ).scalar()
+        return round(result, 2) if result else None
 
-        def get_min_max_stats(db: Session, hours: int = 24):
-            cutoff_time = datetime.now() - timedelta(hours=hours)
-            stats = db.query(
-                func.min(ProbeReading.ph_level).label("min_ph"),
-                func.max(ProbeReading.ph_level).label("max_ph"),
-                func.max(ProbeReading.water_level).label("min_water"),
-                func.max(ProbeReading.water_level).label("max_water"),
-                func.min(ProbeReading.nutrient_level).label("min_nutrient"),
-                func.max(ProbeReading.nutrient_level).label("max_nutrient"),
-            ).filter(
-                ProbeReading.timestamp >= cutoff_time
-            ).first()
-            if not stats:
-                return None
-            return {
-                "ph": {"min": round(stats.min_ph, 2), "max": round(stats.max_ph, 2)},
-                "water_level": {"min": round(stats.min_water, 2), "max": round(stats.max_water, 2)},
-                "nutrient_level": {"min": round(stats.min_nutrient, 2), "max": round(stats.max_nutrient, 2)}
-            }
+def get_min_max_stats(db: Session, hours: int = 24):
+        cutoff_time = datetime.now() - timedelta(hours=hours)
+        stats = db.query(
+            func.min(ProbeReading.ph_level).label("min_ph"),
+            func.max(ProbeReading.ph_level).label("max_ph"),
+            func.max(ProbeReading.water_level).label("min_water"),
+            func.max(ProbeReading.water_level).label("max_water"),
+            func.min(ProbeReading.nutrient_level).label("min_nutrient"),
+            func.max(ProbeReading.nutrient_level).label("max_nutrient"),
+        ).filter(
+            ProbeReading.timestamp >= cutoff_time
+        ).first()
+        if not stats:
+            return None
+        return {
+            "ph": {"min": round(stats.min_ph, 2), "max": round(stats.max_ph, 2)},
+            "water_level": {"min": round(stats.min_water, 2), "max": round(stats.max_water, 2)},
+            "nutrient_level": {"min": round(stats.min_nutrient, 2), "max": round(stats.max_nutrient, 2)}
+        }
