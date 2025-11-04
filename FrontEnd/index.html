@@ -6,21 +6,22 @@
     <title>Document</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
 <body>
    <div class="container">
       <header>
-         <h1 class="logo" data-aos="fade-down" data-aos-duration="1500">HYDROPONIC GARDEN SYSTEM</h1>
+         <h1 class="logo" data-aos="fade-down" data-aos-duration="1500">Growmicron</h1>
+         <nav data-aos="fade-down" data-aos-duration="1500">
+            <button onclick="showPage('home')">Home</button>
+            <button onclick="showPage('manual')">User Manual</button>
+            <button onclick="showPage('analytics')">Analytics</button>
+            <button onclick="showPage('about')">About Us</button>
+         </nav>
       </header>
-      <nav>
-         <button onclick="showPage('home')">HOME</button>
-         <button onclick="showPage('manual')">USER</button>
-         <button onclick="showPage('analytics')">ANALYTICS</button>
-         <button onclick="showPage('about')">ABOUT US</button>
-      </nav>
    </div>
 
    <div id="home-section" class="page-section" style="display: block;">
-      <h2>home page</h2>
+      <h2>Grow with us.</h2>
    </div>
 
    <div id="manual-section" class="page-section" style="display: none;">
@@ -29,6 +30,7 @@
 
    <div id="analytics-section" class="page-section" style="display: none;">
       <div id="gaugeChart"></div>
+      <div id="tdsGaugeChart"></div>
       <div id="lineChart"></div>
    </div>
 

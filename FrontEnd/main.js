@@ -6,12 +6,6 @@ function showPage(pageId) {
     })
 
     document.getElementById(pageId + '-section').style.display = 'block';
-
-    if (pageId == 'analytics') {
-        setTimeout(() => {
-            // chart initialization
-        })
-    }
 }
 
 window.onload = function() {

@@ -6,7 +6,7 @@
 
 body {
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    background-color: #82b164;
+    background-color: white;
     color: white;
     min-height: 100vh;
     line-height: 1.5;
@@ -21,8 +21,6 @@ html, body {
     flex-direction: column;
     align-items: center;
     padding-bottom: 1em;
-    background: url('Images/flower.gif') center 100% / cover no-repeat;
-    background-size: 1500px;
 }
 
 header {
@@ -30,42 +28,48 @@ header {
     justify-content: space-between;
     align-items: center;
     padding: 1rem 5rem;
+    width: 100%
 }
 
 header h1 {
-    margin: 20px 0 0 0;
-    font-size: 3rem;
+    margin: 0;
+    font-size: 30px;
     font-weight: 300;
 }
 
 .logo {
-  color: #264b45;
-  font-family: 'pixel1', serif;
-  animation: float 2.5s ease-in-out infinite, color-glow 3s;
-  text-shadow: 0 0 8px white, 0 0 16px white, 0 0 32px white;
+  color: black;
+  font-family: 'DM Sans', sans-serif;
 }
 
 nav {
     display: flex;
+    justify-content: center;
     align-items: center;
-    gap: 70px;
-    color: white;
-    padding: 1em 3em;
-    border-radius: 8px;
-    width: fit-content;
+    gap: 30px;
 }
 
 nav button {
-  background-color: #264b45;
-  border: 3px solid white;
-  border-radius: 25px;
-  color: white;
-  padding: 0.5em 1.2em;
-  box-shadow: 0 0 15px white;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: bold;
+  background: none;
+  border: none;
+  color: black;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.3s ease;
+
 }
 
-nav, nav button {
-  font-family: 'Lemon', serif;
+nav button:hover {
+  transform: scale(1.1);
+  text-decoration: underline;
+}
+
+#home-section h2 {
+  font-size: 5rem;
+  text-align: center;
 }
 
 #gaugeChart, #lineChart {
@@ -82,39 +86,5 @@ nav, nav button {
 
 .page-section h2 {
   margin-bottom: 1rem;
-  color: white;
-}
-
-@font-face {
-  font-family: 'pixel1';
-  src: url('Fonts/pixel1.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Ashton';
-  src: url('Fonts/ashton.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Lemon';
-  src: url('Fonts/lemon.otf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Modern';
-  src: url('Fonts/modern.otf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-}
-
-@keyframes float {
-  0%   { transform: translateY(0); }
-  50%  { transform: translateY(-10px); }
-  100% { transform: translateY(0); }
+  color: black;
 }
