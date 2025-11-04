@@ -12,16 +12,28 @@
          <h1 class="logo" data-aos="fade-down" data-aos-duration="1500">HYDROPONIC GARDEN SYSTEM</h1>
       </header>
       <nav>
-         <button onclick="location.href='#'">HOME</button>
-         <button onclick="location.href='#'">USER MANUAL</button>
-         <button onclick="location.href='#'">ANALYTICS</button>
-         <button onclick="location.href='#'">ABOUT US</button>
+         <button onclick="showPage('home')">HOME</button>
+         <button onclick="showPage('manual')">USER</button>
+         <button onclick="showPage('analytics')">ANALYTICS</button>
+         <button onclick="showPage('about')">ABOUT US</button>
       </nav>
    </div>
 
-   <div id="analytics-section" style="display: block;">
+   <div id="home-section" class="page-section" style="display: block;">
+      <h2>home page</h2>
+   </div>
+
+   <div id="manual-section" class="page-section" style="display: none;">
+      <h2>user manual</h2>
+   </div>
+
+   <div id="analytics-section" class="page-section" style="display: none;">
       <div id="gaugeChart"></div>
       <div id="lineChart"></div>
+   </div>
+
+   <div id="about-section" class="page-section" style="display: none;">
+      <h2>about</h2>
    </div>
 
    <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>

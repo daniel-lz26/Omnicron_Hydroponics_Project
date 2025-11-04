@@ -33,7 +33,7 @@ header {
 }
 
 header h1 {
-    margin: 0;
+    margin: 20px 0 0 0;
     font-size: 3rem;
     font-weight: 300;
 }
@@ -56,10 +56,12 @@ nav {
 }
 
 nav button {
-  background-color: #bfdd68;
-  border: none;
+  background-color: #264b45;
+  border: 3px solid white;
+  border-radius: 25px;
   color: white;
   padding: 0.5em 1.2em;
+  box-shadow: 0 0 15px white;
 }
 
 nav, nav button {
@@ -70,6 +72,17 @@ nav, nav button {
   width: 600px;
   height: 300px;
   margin: 2em auto;
+}
+
+.page-section {
+  padding: 2rem;
+  text-align: center;
+  min-height: 400px;
+}
+
+.page-section h2 {
+  margin-bottom: 1rem;
+  color: white;
 }
 
 @font-face {
