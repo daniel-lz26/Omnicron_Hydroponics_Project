@@ -10,32 +10,40 @@
 <body>
    <div class="container">
       <header>
-         <h1 class="logo" data-aos="fade-down" data-aos-duration="1500">Growmicron</h1>
+         <h1 class="logo" data-aos="fade-down" data-aos-duration="1500">growmicron</h1>
          <nav data-aos="fade-down" data-aos-duration="1500">
-            <button onclick="showPage('home')">Home</button>
-            <button onclick="showPage('manual')">User Manual</button>
-            <button onclick="showPage('analytics')">Analytics</button>
-            <button onclick="showPage('about')">About Us</button>
+            <button onclick="scrollToSection('home')">Home</button>
+            <button onclick="scrollToSection('manual')">User Manual</button>
+            <button onclick="scrollToSection('analytics')">Analytics</button>
+            <button onclick="scrollToSection('about')">About</button>
          </nav>
       </header>
    </div>
 
-   <div id="home-section" class="page-section" style="display: block;">
-      <h2>Grow with us.</h2>
+   <div id="home-section" class="page-section">
+      <h2><span id="typing-text"></span><span class="cursor">|</span></h2>
+
+      <div class="spline-placeholder">
+         <p>Spline Placeholder</p>
+      </div>
    </div>
 
-   <div id="manual-section" class="page-section" style="display: none;">
-      <h2>user manual</h2>
+   <div id="manual-section" class="page-section">
+      <h2>user manual.</h2>
    </div>
 
-   <div id="analytics-section" class="page-section" style="display: none;">
+   <div id="analytics-section" class="page-section">
+      <h2>analytics.</h2>
       <div id="gaugeChart"></div>
-      <div id="tdsGaugeChart"></div>
       <div id="lineChart"></div>
    </div>
 
-   <div id="about-section" class="page-section" style="display: none;">
-      <h2>about</h2>
+   <div id="about-section" class="page-section">
+      <h2>about us.</h2>
+      <button onclick="window.open('https://github.com/daniel-lz26/Omnicron_Hydroponics_Project')" class ="github-button">
+         Github
+      </button>
+      <p>Lorem ipsum dolor sit amet. A officiis rerum id perferendis architecto ut repellat voluptatum vel eligendi facere. Et corrupti excepturi ut quis esse aut enim fugit eos voluptate cumque. Sit quisquam nemo rem itaque magnam quo quidem dolorem aut incidunt esse quo voluptatem nihil! Et maxime aperiam qui pariatur exercitationem non quos fugiat.</p>
    </div>
 
    <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>

@@ -1,15 +1,39 @@
-// page switch
-function showPage(pageId) {
-    const pages = document.querySelectorAll('.page-section');
-    pages.forEach(page => {
-        page.style.display = 'none';
-    })
+// typing anim.
+function typeText(element, text, speed = 75) {
+    let i = 0;
+    element.textContent = '';
+    
+    function type() {
+        if (i < text.length) {
+            element.textContent += text.charAt(i);
+            i++;
+            setTimeout(type, speed);
+        }
+    }
+    type();
+}
 
-    document.getElementById(pageId + '-section').style.display = 'block';
+// page switch
+function scrollToSection(sectionId) {
+    document.getElementById(sectionId + '-section').scrollIntoView({
+        behavior: 'smooth'
+    });
+    // anim plays when home is shown
+    if (sectionId === 'home') {
+        const typingElement = document.getElementById('typing-text');
+        if (typingElement) {
+            setTimeout(() => {
+                typeText(typingElement, "Grow with us.", 75);
+            }, 500);
+        }
+    }
 }
 
 window.onload = function() {
-    showPage('home');
+    const typingElement = document.getElementById('typing-text');
+    if (typingElement) {
+        setTimeout(() => {
+            typeText(typingElement, "Grow with us.", 75);
+        }, 1000)
+    }
 }
-
-
