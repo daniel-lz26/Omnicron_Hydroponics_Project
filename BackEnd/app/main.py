@@ -25,3 +25,5 @@ app.add_middleware(
     allow_headers=["*"],
 )
 # Creating the endpoints for the API
+@app.post("/readings/", response_model=schemas.ProbeReadingResponse)
+def create_reading(reading: schemas.ProbeReadingCreate,)
