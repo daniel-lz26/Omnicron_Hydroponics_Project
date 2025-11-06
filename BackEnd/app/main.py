@@ -12,7 +12,7 @@ from database import engine, get_db, Base
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
-    title="Hydroponic System API"
+    title="Hydroponic System API",
     description="API for monitoring hydroponic garden system",
     version="1.0.0"
 )
