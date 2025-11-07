@@ -102,6 +102,12 @@ nav button:hover {
   display: inline-block;
 }
 
+.github-button:hover {
+  background-color: #1cd760;
+  padding: 10px 25px;
+  font-size: 18px;
+}
+
 #gaugeChart, #lineChart {
   width: 600px;
   height: 300px;
