@@ -16,7 +16,7 @@ from datetime import datetime, timedelta
 
 def create_probe_reading(db: Session, reading: ProbeReadingCreate):
     # turns the probe reading into python
-    new_reading = ProbeReading(**reading.dict())
+    new_reading = ProbeReading(**reading.model_dump())
     db.add(new_reading)  # adds reading into SESSION NOT DATABASE
     db.commit()  # adds reading to database
     db.refresh(new_reading)  # fetches the id into database for reading
@@ -136,7 +136,7 @@ def get_average_ph(db: Session, hours: int = 24):
     result = db.query(func.avg(ProbeReading.ph_level)).filter(
         ProbeReading.timestamp >= cutoff_time
     ).scalar()
-    return round(result, 2) if result is not None else 0.0
+    return round(result, 2) if result is not None else None
 
 
 def get_average_nutrient_level(db: Session, hours: int = 24):
@@ -144,7 +144,7 @@ def get_average_nutrient_level(db: Session, hours: int = 24):
     result = db.query(func.avg(ProbeReading.nutrient_level)).filter(
         ProbeReading.timestamp >= cutoff_time
     ).scalar()
-    return round(result, 2) if result is not None else 0.0
+    return round(result, 2) if result is not None else None
 
 
 def get_average_water_level(db: Session, hours: int = 24):
@@ -152,7 +152,7 @@ def get_average_water_level(db: Session, hours: int = 24):
     result = db.query(func.avg(ProbeReading.water_level)).filter(
         ProbeReading.timestamp >= cutoff_time
     ).scalar()
-    return round(result, 2) if result is not None else 0.0
+    return round(result, 2) if result is not None else None
 
 
 def get_min_max_stats(db: Session, hours: int = 24):
