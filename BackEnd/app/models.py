@@ -2,7 +2,7 @@
 # it basic terms this file is where we make the db tables.
 from datetime import datetime
 from sqlalchemy import Column, Integer, Float, DateTime
-from sqlaclchemy.sql import func
+from sqlalchemy.sql import func
 from database import Base
 
 
