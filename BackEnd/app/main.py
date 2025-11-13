@@ -1,6 +1,8 @@
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
+from fastapi import FastAPI, Depends, HTTPException
+
 from datetime import datetime
 from typing import List, Optional
 
@@ -35,7 +37,7 @@ def create_reading(reading: schemas.ProbeReadingCreate, db: Session = Depends(ge
 # retrives all probe readings
 
 
-@app.get("/readings/", response_model=list[schemas.ProbeReadingResponse])
+@app.get("/readings/", response_model=List[schemas.ProbeReadingResponse])
 def get_all_readings(db: Session = Depends(get_db)):
     return crud.get_all_readings(db)
 
