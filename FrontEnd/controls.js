@@ -30,7 +30,7 @@ async function controlDevice(device, action) {
     const data = await response.json();
 
     // Log to console for debugging
-    console.log(`✅ ${device.toUpperCase()} ${action.toUpperCase()}:`, data);
+    console.log(` ${device.toUpperCase()} ${action.toUpperCase()}:`, data);
 
     // Update status
     statusSpan.textContent = action === 'on' ? 'ON ✓' : 'OFF';
@@ -40,7 +40,7 @@ async function controlDevice(device, action) {
     showNotification(`${device.charAt(0).toUpperCase() + device.slice(1)} turned ${action.toUpperCase()}`, 'success');
 
   } catch (error) {
-    console.error(`❌ Error controlling ${device}:`, error);
+    console.error(` Error controlling ${device}:`, error);
     statusSpan.textContent = 'Error!';
     statusSpan.className = 'status-error';
 
