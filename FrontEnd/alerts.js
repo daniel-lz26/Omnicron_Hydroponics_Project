@@ -192,6 +192,7 @@ function updateAlertsDisplay(alerts) {
 // Fetch latest reading and check for alerts
 async function monitorSystemAlerts() {
   try {
+    // Get sensor readings
     const response = await fetch(`${API_BASE_URL}/readings/latest`);
 
     if (!response.ok) {
@@ -200,8 +201,31 @@ async function monitorSystemAlerts() {
 
     const data = await response.json();
 
+    // Get pump status
+    let pumpStatus = null;
+    try {
+      const pumpResponse = await fetch(`${API_BASE_URL}/pump/status`);
+      if (pumpResponse.ok) {
+        pumpStatus = await pumpResponse.json();
+      }
+    } catch (e) {
+      console.warn('Could not fetch pump status:', e);
+    }
+
     // Check for alerts
     const alerts = checkAlerts(data);
+
+    // Add pump status alert if pump is running
+    if (pumpStatus && pumpStatus.status === 'on') {
+      alerts.unshift({
+        id: 'pump-running',
+        type: 'info',
+        icon: '💧',
+        title: 'Pump Active',
+        message: `Pump is currently running - Last activated: ${new Date(pumpStatus.last_updated).toLocaleTimeString()}`,
+        value: 'on'
+      });
+    }
 
     // Update display
     updateAlertsDisplay(alerts);
