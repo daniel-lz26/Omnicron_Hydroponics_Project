@@ -1,7 +1,7 @@
 // ---------------------------------------
 // SYSTEM ALERTS MONITORING
 // ---------------------------------------
-const API_BASE_URL = 'https://omnicronhydroponicsproject-production.up.railway.app';
+// Note: API_BASE_URL is defined in charts.js (loaded first)
 
 // Alert thresholds
 const THRESHOLDS = {
