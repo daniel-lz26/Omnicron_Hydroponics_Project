@@ -90,6 +90,17 @@ nav button:hover {
   padding-top: 40px;
 }
 
+#dashboard-section {
+  text-align: left;
+  font-size: 30px;
+}
+
+#settings-section {
+  text-align: center;
+  font-size: 30px;
+  padding-top: 100px;
+}
+
 .github-button {
   background-color: black;
   color: white;
@@ -185,7 +196,32 @@ nav button:hover {
   justify-content: center;
 }
 
+.about-image {
+  max-width: 75%;
+  height: auto;
+  border-radius: 10px;
+  margin: 2rem auto;
+  display: block;
+}
+
 @keyframes blink {
   0%, 50% { opacity: 1; }
   51%, 100% { opacity: 0; }
+}
+
+.settings-page {
+  padding-top: 100px;
+  min-height: 100vh;
+}
+
+.settings-page .page-section {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.settings-page h2 {
+  text-align: left;
+  font-size: 30px;
+  margin-bottom: 2rem;
 }

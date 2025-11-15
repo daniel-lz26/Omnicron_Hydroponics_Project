@@ -1,5 +1,5 @@
 // bryan's: hai this does api configuration
-const API_BASE_URL = 'https://omnicronhydroponicsproject-production.up.railway.app'; // this will change w raspberry pi URL
+const API_BASE_URL = 'http://localhost:8000'; // this will change w raspberry pi URL
 const UPDATE_INTERVAL = 30000; // update int: 30 sec
 let allReadings = [];
 

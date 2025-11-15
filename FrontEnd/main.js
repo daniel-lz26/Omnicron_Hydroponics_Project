@@ -27,6 +27,23 @@ function scrollToSection(sectionId) {
             }, 500);
         }
     }
+
+    // section title animations (aos library)
+    if (['manual', 'analytics', 'about'].includes(sectionId)) {
+        setTimeout(() => {
+            AOS.refresh();
+            
+            const sectionElement = document.getElementById(sectionId + '-section');
+            const titleElement = sectionElement.querySelector('h2[data-aos]');
+            
+            if (titleElement) {
+                titleElement.classList.remove('aos-animate');
+                setTimeout(() => {
+                    titleElement.classList.add('aos-animate');
+                }, 100);
+            }
+        }, 600);
+    }
 }
 
 window.onload = function() {
