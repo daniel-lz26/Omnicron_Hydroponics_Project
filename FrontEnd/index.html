@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Growmicron</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" />
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -13,9 +13,11 @@
          <h1 class="logo" data-aos="fade-down" data-aos-duration="1500">growmicron</h1>
          <nav data-aos="fade-down" data-aos-duration="1500">
             <button onclick="scrollToSection('home')">Home</button>
+            <button onclick="scrollToSection('dashboard')">Dashboard</button>
             <button onclick="scrollToSection('manual')">User Manual</button>
             <button onclick="scrollToSection('analytics')">Analytics</button>
             <button onclick="scrollToSection('about')">About</button>
+            <button onclick="window.location.href='settings.html'">Settings</button>
          </nav>
       </header>
    </div>
@@ -30,6 +32,10 @@
 
    <div id="manual-section" class="page-section">
       <h2 data-aos="fade-right" data-aos-duration="1000">user manual.</h2>
+   </div>
+
+   <div id="dashboard-section" class="page-section">
+      <h2 data-aos="fade-right" data-aos-duration="1000">dashboard.</h2>
    </div>
 
    <div id="analytics-section" class="page-section">

@@ -1,5 +1,5 @@
 // bryan's: hai this does api configuration
-const API_BASE_URL = 'http://localhost:8000'; // this will change w raspberry pi URL
+const API_BASE_URL = 'https://omnicronhydroponicsproject-production.up.railway.app'; // this will change w raspberry pi URL
 const UPDATE_INTERVAL = 30000; // update int: 30 sec
 let allReadings = [];
 
@@ -19,9 +19,8 @@ const tdsData = [750,760,770,780,790,750,765,760,770,760,755,750,740,740,750,755
 const waterLevelData = [15,16,15,14,15,15,16,15,17,16,15,16,15,16,15,17,15,15,16,15,17,15,16,15];
 // Title of chart/where it sits
 const lineOption = {
-  backgroundColor: '#f9fafb',
  title: {
-   text: 'water chart demo',
+   text: 'Water chart demo',
    left: 'center',
    top: 10
  }, //shows data when we hover hover the chart
@@ -29,16 +28,14 @@ const lineOption = {
    trigger: 'axis'
  },
  legend: { //show/hide lines that are on the chart
-   top: 35,
-   data: ['pH level', 'TDS (ppm)', 'water level (%)']
+   top: 40,
+   data: ['pH Level', 'TDS (ppm)', 'Water Level (%)']
  },
  grid: {//spacing
-   left: '3%',
-   right: '4%',
-   bottom: '3%',
-   containLabel: true,
-   borderWidth: 2,
-   borderColor: '#000000'
+   left: '8%',
+   right: '8%',
+   bottom: '10%',
+   containLabel: true
  },
  xAxis: { //24 hour x axis
    type: 'category',
@@ -56,7 +53,7 @@ const lineOption = {
      max: 14,
      position: 'left',
      axisLine: {
-       lineStyle: { color: '#000000ff' }
+       lineStyle: { color: '#58D9F9' }
      },
      axisLabel: {
        formatter: '{value}'
@@ -66,10 +63,8 @@ const lineOption = {
      type: 'value',
      name: 'TDS / Water Level',
      position: 'right',
-     min: 0,
-     max: 2000,
      axisLine: {
-       lineStyle: { color: '#000000ff' }
+       lineStyle: { color: '#FF6E76' }
      },
      axisLabel: {
        formatter: '{value}'
@@ -78,11 +73,18 @@ const lineOption = {
  ],
  series: [
    {
-     name: 'pH level',
+     name: 'pH Level',
      type: 'line',
      smooth: true, //curved lines and not rigid
      yAxisIndex: 0, //which axis to use
      data: phData,
+     lineStyle: { //color/thickness
+       width: 3,
+       color: '#58D9F9'
+     },
+     areaStyle: { //under the line theres a tint of color
+       color: 'rgba(88,217,249,0.1)'
+     }
    },
    {
      name: 'TDS (ppm)',
@@ -90,13 +92,27 @@ const lineOption = {
      smooth: true,
      yAxisIndex: 1,
      data: tdsData,
+     lineStyle: {
+       width: 3,
+       color: '#FF6E76'
+     },
+     areaStyle: {
+       color: 'rgba(255,110,118,0.1)'
+     }
    },
    {
-     name: 'water level (%)',
+     name: 'Water Level (%)',
      type: 'line',
      smooth: true,
      yAxisIndex: 1,
      data: waterLevelData,
+     lineStyle: {
+       width: 3,
+       color: '#7CFFB2'
+     },
+     areaStyle: {
+       color: 'rgba(124,255,178,0.1)'
+     }
    }
  ]
 };
@@ -157,10 +173,10 @@ const phGaugeOption = {
         formatter: function (v) { return v % 2 === 0 ? v : ''; }
       },
       title: {
+        text: 'pH Level',
         offsetCenter: [0, '-10%'],
         fontSize: 20,
-        color: '#222',
-        fontFamily: 'DM Sans, sans-serif'
+        color: '#222'
       },
       detail: {
         fontSize: 32,
@@ -168,8 +184,7 @@ const phGaugeOption = {
         offsetCenter: [0, '-35%'],
         valueAnimation: true,
         formatter: v => v.toFixed(1) + ' pH',
-        color: '#222',
-        fontFamily: 'DM Sans, sans-serif'
+        color: '#222'
       },
       data: [{ value: currentData.ph, name: 'pH Level' }]
     }
@@ -225,10 +240,10 @@ const tdsGaugeOption = {
         }
       },
       title: {
+        text: 'TDS (ppm)',
         offsetCenter: [0, '-10%'],
         fontSize: 20,
-        color: '#222',
-        fontFamily: 'DM Sans, sans-serif'
+        color: '#222'
       },
       detail: {
         fontSize: 32,
@@ -238,8 +253,7 @@ const tdsGaugeOption = {
         formatter: function (value) {
           return value.toFixed(0) + ' ppm';
         },
-        color: '#222',
-        fontFamily: 'DM Sans, sans-serif'
+        color: '#222'
       },
       data: [{ value: currentData.tds, name: 'TDS (ppm)' }]
     }
@@ -298,7 +312,7 @@ const waterLevelGaugeOption = {
         offsetCenter: [0, '-10%'],
         fontSize: 20,
         color: '#222',
-        fontFamily: 'DM Sans, sans-serif'
+        text: 'Water Level (%)'
       },
       detail: {
         fontSize: 32,
@@ -308,10 +322,9 @@ const waterLevelGaugeOption = {
         formatter: function (value) {
           return value.toFixed(0) + '%';
         },
-        color: '#222',
-        fontFamily: 'DM Sans, sans-serif'
+        color: '#222'
       },
-      data: [{ value: currentData.waterLevel, name: 'water level (%)' }]
+      data: [{ value: currentData.waterLevel, name: 'Water Level' }]
     }
   ]
 };
