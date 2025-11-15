@@ -131,7 +131,7 @@ const lineOption = {
      type: 'line',
      smooth: true,
      yAxisIndex: 2,
-     data: waterLevelData.map(value => value > 20 ? 'Yes' : 'No'),
+     data: waterLevelData.map(value => value > 5 ? 'Yes' : 'No'),
      lineStyle: {
        width: 3,
        color: getWaterColor(currentData.waterLevel)
@@ -347,7 +347,7 @@ const waterLevelGaugeOption = {
         },
         color: '#222'
       },
-      data: [{ value: currentData.waterLevel > 20 ? 1 : 0, name: 'Water Status' }]
+      data: [{ value: currentData.waterLevel > 5 ? 1 : 0, name: 'Water Status' }]
     }
   ]
 };
@@ -405,15 +405,19 @@ function getTdsColor(tdsValue) {
 
 // Function to get color based on water level (matches water status)
 function getWaterColor(waterLevel) {
-  return waterLevel > 20 ? '#009E73' : '#D55E00'; // Has water: Teal, No water: Red
+  return waterLevel > 5 ? '#009E73' : '#D55E00'; // Has water: Teal, No water: Red
 }
 
 // updates gauge charts w live data
 function updateGaugeCharts(data) {
   if (data) {
+    console.log("🔍 Received data:", data); // DEBUGGING - SEE WHAT'S COMING IN
+    
     currentData.ph = data.ph_level;
     currentData.tds = data.nutrient_level;
     currentData.waterLevel = data.water_level;
+    
+    console.log("💧 Water level value:", currentData.waterLevel); // DEBUGGING - SEE WATER LEVEL
 
     // ph gauge
     phGaugeChart.setOption({
@@ -429,16 +433,15 @@ function updateGaugeCharts(data) {
       }]
     });
 
-    // water lvl - convert percentage to binary status (threshold at 20%)
-    const waterStatus = currentData.waterLevel > 20 ? 1 : 0;
+    // water lvl - convert percentage to binary status (LOWERED threshold to 5%)
+    const waterStatus = currentData.waterLevel > 5 ? 1 : 0;
+    console.log("🚰 Water status (0=NO, 1=YES):", waterStatus); // DEBUGGING - SEE STATUS
+    
     waterLevelGaugeChart.setOption({
       series: [{
         data: [{ value: waterStatus, name: 'Water Status' }]
       }]
     });
-
-    // Update line chart colors based on current gauge values
-    updateLineChartColors();
   }
 }
 
@@ -456,7 +459,7 @@ function updateLineChart(readings) {
       const phValues = last24.map(reading => reading.ph_level);
       const tdsValues = last24.map(reading => reading.nutrient_level);
       const waterValues = last24.map(reading => reading.water_level);
-      const waterStatusValues = waterValues.map(value => value > 20 ? 'Yes' : 'No');
+      const waterStatusValues = waterValues.map(value => value > 5 ? 'Yes' : 'No');
 
       lineChart.setOption({
         xAxis: {
@@ -465,7 +468,7 @@ function updateLineChart(readings) {
         series: [
           { data: phValues.length >= 24 ? phValues : phData },
           { data: tdsValues.length >= 24 ? tdsValues : tdsData },
-          { data: waterStatusValues.length >= 24 ? waterStatusValues : waterLevelData.map(value => value > 20 ? 'Yes' : 'No') }
+          { data: waterStatusValues.length >= 24 ? waterStatusValues : waterLevelData.map(value => value > 5 ? 'Yes' : 'No') }
         ]
       });
     }
@@ -474,7 +477,7 @@ function updateLineChart(readings) {
 
 // initailizes data loading
 async function initializeCharts() {
-  console.log('Initializing charts with live data...');
+  console.log('📊 Initializing charts with live data...');
   
   const latestReading = await fetchLatestReading();
   if (latestReading) {
@@ -488,7 +491,7 @@ async function initializeCharts() {
 
   // sets up the periodic updates
   setInterval(async () => {
-    console.log('Updating charts with latest data...');
+    console.log('🔄 Updating charts with latest data...');
     const latestReading = await fetchLatestReading();
     if (latestReading) {
       updateGaugeCharts(latestReading);
