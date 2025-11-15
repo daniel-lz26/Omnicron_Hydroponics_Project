@@ -1,515 +1,261 @@
-// bryan's: hai this does api configuration
-const API_BASE_URL = 'https://omnicronhydroponicsproject-production.up.railway.app'; // this will change w raspberry pi URL
-const UPDATE_INTERVAL = 30000; // update int: 30 sec
-let allReadings = [];
+// ---------------------------------------
+// API CONFIG
+// ---------------------------------------
+const API_BASE_URL = 'https://omnicronhydroponicsproject-production.up.railway.app';
+const UPDATE_INTERVAL = 30000; // 30 sec refresh
 
-// current live data
+// current live data defaults
 let currentData = {
-  ph: 6.5, tds: 700, waterLevel: 75
+  ph: 6.5,
+  tds: 700,
+  waterLevel: 75
 };
 
+// ---------------------------------------
+// WATER STATUS HELPERS
+// ---------------------------------------
+function getWaterStatus(level) {
+  if (level < 7) return "OUT OF WATER";
+  if (level > 50) return "IN WATER";
+  return "MID LEVEL";
+}
 
+// gauge needs binary: 0 = no water, 1 = water
+function waterStatusBinary(level) {
+  return level > 50 ? 1 : 0;
+}
 
+// color for line chart + gauge
+function getWaterColor(level) {
+  if (level < 7) return '#D55E00';   // red
+  if (level > 50) return '#009E73';  // green
+  return '#E69F00';                  // orange
+}
 
-// Mock data for 24 hours time line, using an array to make time increments
-const hours = Array.from({ length: 24 }, (_, i) => i + ":00");
-// Mock data to show lines working, we put 24 for each hour (real one with be every 6 hours)
-const phData = [5.0,5.1,5.2,5.3,5.1,5.5,5.4,5.6,5.2,5.5,5.7,5.6,5.6,5.7,5.4,5.6,5.5,5.4,5.6,5.7,5.6,5.6,5.7,5.8];
-const tdsData = [750,760,770,780,790,750,765,760,770,760,755,750,740,740,750,755,750,760,750,755,750,765,770,765];
-const waterLevelData = [15,16,15,14,15,15,16,15,17,16,15,16,15,16,15,17,15,15,16,15,17,15,16,15];
-// Title of chart/where it sits
-const lineOption = {
- title: {
-   text: 'Water chart demo',
-   left: 'center',
-   top: 10
- }, //shows data when we hover hover the chart
- tooltip: {
-   trigger: 'axis',
-   formatter: function (params) {
-     let result = params[0].axisValueLabel + '<br/>';
-     params.forEach(function (item) {
-       if (item.seriesName === 'Water Status') {
-         result += item.marker + item.seriesName + ': ' + item.value + '<br/>';
-       } else if (item.seriesName === 'pH Level') {
-         result += item.marker + item.seriesName + ': ' + item.value.toFixed(1) + '<br/>';
-       } else if (item.seriesName === 'TDS (ppm)') {
-         result += item.marker + item.seriesName + ': ' + item.value.toFixed(0) + '<br/>';
-       }
-     });
-     return result;
-   }
- },
- legend: { //show/hide lines that are on the chart
-   top: 40,
-   data: ['pH Level', 'TDS (ppm)', 'Water Status']
- },
- grid: {//spacing
-   left: '8%',
-   right: '8%',
-   bottom: '10%',
-   containLabel: true
- },
- xAxis: { //24 hour x axis
-   type: 'category',
-   boundaryGap: false,
-   data: hours,
-   name: 'Time (hours)',
-   nameLocation: 'middle',
-   nameGap: 30
- },
- yAxis: [// left is ph, middle is tds, right is water status
-   {
-     type: 'value',
-     name: 'pH Level',
-     min: 0,
-     max: 14,
-     position: 'left',
-     axisLine: {
-       lineStyle: { color: '#58D9F9' }
-     },
-     axisLabel: {
-       formatter: '{value}'
-     }
-   },
-   {
-     type: 'value',
-     name: 'TDS (ppm)',
-     position: 'right',
-     axisLine: {
-       lineStyle: { color: '#FF6E76' }
-     },
-     axisLabel: {
-       formatter: '{value}'
-     }
-   },
-   {
-     type: 'category',
-     name: 'Water Status',
-     position: 'right',
-     offset: 80,
-     data: ['No', 'Yes'],
-     axisLine: {
-       lineStyle: { color: '#009E73' }
-     },
-     axisLabel: {
-       formatter: '{value}'
-     }
-   }
- ],
- series: [
-   {
-     name: 'pH Level',
-     type: 'line',
-     smooth: true, //curved lines and not rigid
-     yAxisIndex: 0, //which axis to use
-     data: phData,
-     lineStyle: { //color/thickness
-       width: 3,
-       color: '#58D9F9'
-     },
-     areaStyle: { //under the line theres a tint of color
-       color: 'rgba(88,217,249,0.1)'
-     }
-   },
-   {
-     name: 'TDS (ppm)',
-     type: 'line',
-     smooth: true,
-     yAxisIndex: 1,
-     data: tdsData,
-     lineStyle: {
-       width: 3,
-       color: '#FF6E76'
-     },
-     areaStyle: {
-       color: 'rgba(255,110,118,0.1)'
-     }
-   },
-   {
-     name: 'Water Status',
-     type: 'line',
-     smooth: true,
-     yAxisIndex: 2,
-     data: waterLevelData.map(value => value > 5 ? 'Yes' : 'No'),
-     lineStyle: {
-       width: 3,
-       color: getWaterColor(currentData.waterLevel)
-     },
-     areaStyle: {
-       color: 'rgba(0,158,115,0.1)'
-     }
-   }
- ]
-};
-// Initialize chart
-var lineChart = echarts.init(document.getElementById('lineChart'));
-lineChart.setOption(lineOption);
-
-// initializing gauge charts :3
-var phGaugeChart = echarts.init(document.getElementById('phGaugeChart'));
-var tdsGaugeChart = echarts.init(document.getElementById('tdsGaugeChart'));
-var waterLevelGaugeChart = echarts.init(document.getElementById('waterLevelGaugeChart'));
-
-// okabe-ito colorblind-friendly palette
-// ph gauge chart
-const phGaugeOption = {
-  series: [
-    {
-      type: 'gauge',
-      startAngle: 180,
-      endAngle: 0,
-      center: ['50%', '75%'],
-      radius: '90%',
-      min: 0,
-      max: 14,
-      splitNumber: 14,
-      axisLine: {
-        lineStyle: {
-          width: 10,
-          color: [
-            [6/14,  '#0072B2'],
-            [7/14,  '#56B4E9'],
-            [8/14,  '#009E73'],
-            [12/14, '#E69F00'],
-            [1.0,   '#CC79A7']
-          ]
-        }
-      },
-      pointer: {
-        icon: 'path://M12.8,0.7l12,40.1H0.7L12.8,0.7z',
-        length: '12%',
-        width: 24,
-        offsetCenter: [0, '-60%'],
-        itemStyle: { color: '#333' }
-      },
-      axisTick: {
-        length: 12,
-        lineStyle: { color: '#333', width: 3 }
-      },
-      splitLine: {
-        length: 25,
-        lineStyle: { color: '#333', width: 5 }
-      },
-      axisLabel: {
-        color: '#222',
-        fontSize: 16,
-        fontWeight: 'bold',
-        distance: -55,
-        formatter: function (v) { return v % 2 === 0 ? v : ''; }
-      },
-      title: {
-        text: 'pH Level',
-        offsetCenter: [0, '-10%'],
-        fontSize: 20,
-        color: '#222'
-      },
-      detail: {
-        fontSize: 32,
-        fontWeight: 'bold',
-        offsetCenter: [0, '-35%'],
-        valueAnimation: true,
-        formatter: v => v.toFixed(1) + ' pH',
-        color: '#222'
-      },
-      data: [{ value: currentData.ph, name: 'pH Level' }]
-    }
-  ]
-};
-
-
-// tds gauge chart
-const tdsGaugeOption = {
-  series: [
-    {
-      type: 'gauge',
-      startAngle: 180,
-      endAngle: 0,
-      center: ['50%', '75%'],
-      radius: '90%',
-      min: 500,
-      max: 900,
-      splitNumber: 8,
-      axisLine: {
-        lineStyle: {
-          width: 10,
-          color: [
-            [0.375, '#0072B2'], // 500–650  (Low) - blue
-            [0.625, '#009E73'], // 650–750  (Moderate) - teal
-            [0.875, '#E69F00'], // 750–850  (High) - orange
-            [1.000, '#CC79A7']  // 850–900  (Very High) - magenta
-          ]
-        }
-      },
-      pointer: {
-        icon: 'path://M12.8,0.7l12,40.1H0.7L12.8,0.7z',
-        length: '12%',
-        width: 24,
-        offsetCenter: [0, '-60%'],
-        itemStyle: { color: '#333' }
-      },
-      axisTick: {
-        length: 12,
-        lineStyle: { color: '#333', width: 3 }
-      },
-      splitLine: {
-        length: 25,
-        lineStyle: { color: '#333', width: 5 }
-      },
-      axisLabel: {
-        color: '#222',
-        fontSize: 16,
-        fontWeight: 'bold',
-        distance: -55,
-        formatter: function (value) {
-          return value % 100 === 0 ? value : '';
-        }
-      },
-      title: {
-        text: 'TDS (ppm)',
-        offsetCenter: [0, '-10%'],
-        fontSize: 20,
-        color: '#222'
-      },
-      detail: {
-        fontSize: 32,
-        fontWeight: 'bold',
-        offsetCenter: [0, '-35%'],
-        valueAnimation: true,
-        formatter: function (value) {
-          return value.toFixed(0) + ' ppm';
-        },
-        color: '#222'
-      },
-      data: [{ value: currentData.tds, name: 'TDS (ppm)' }]
-    }
-  ]
-};
-
-// water lvl gauge chart
-const waterLevelGaugeOption = {
-  series: [
-    {
-      type: 'gauge',
-      startAngle: 180,
-      endAngle: 0,
-      center: ['50%', '75%'],
-      radius: '90%',
-      min: 0,
-      max: 1,
-      splitNumber: 2,
-      axisLine: {
-        lineStyle: {
-          width: 10,
-          color: [
-            [0.5, '#D55E00'],   // No Water - Red
-            [1.0, '#009E73']    // Has Water - Green
-          ]
-        }
-      },
-      pointer: {
-        icon: 'path://M12.8,0.7l12,40.1H0.7L12.8,0.7z',
-        length: '12%',
-        width: 24,
-        offsetCenter: [0, '-60%'],
-        itemStyle: { color: '#333' }
-      },
-      axisTick: {
-        length: 12,
-        lineStyle: { color: '#333', width: 3 }
-      },
-      splitLine: {
-        length: 25,
-        lineStyle: { color: '#333', width: 5 }
-      },
-      axisLabel: {
-        color: '#222',
-        fontSize: 14,
-        distance: -55,
-        fontWeight: 'bold',
-        formatter: function (value) {
-          return value === 0 ? 'NO' : value === 1 ? 'YES' : '';
-        }
-      },
-      title: {
-        offsetCenter: [0, '-10%'],
-        fontSize: 20,
-        color: '#222',
-        text: 'Water Status'
-      },
-      detail: {
-        fontSize: 28,
-        offsetCenter: [0, '-35%'],
-        fontWeight: 'bold',
-        valueAnimation: true,
-        formatter: function (value) {
-          return value === 0 ? 'NO WATER' : 'HAS WATER';
-        },
-        color: '#222'
-      },
-      data: [{ value: currentData.waterLevel > 5 ? 1 : 0, name: 'Water Status' }]
-    }
-  ]
-};
-
-phGaugeChart.setOption(phGaugeOption);
-tdsGaugeChart.setOption(tdsGaugeOption);
-waterLevelGaugeChart.setOption(waterLevelGaugeOption);
-
-// api functions
-// falls back to mock data if API fails
+// ---------------------------------------
+// FETCH FUNCTIONS
+// ---------------------------------------
 async function fetchLatestReading() {
   try {
-    const response = await fetch(`${API_BASE_URL}/readings/latest`);
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error('Error fetching latest reading:', error);
+    const res = await fetch(`${API_BASE_URL}/readings/latest`);
+    if (!res.ok) throw new Error(res.status);
+    return await res.json();
+  } catch (e) {
+    console.error("❌ Latest reading error:", e);
     return null;
   }
 }
 
 async function fetchAllReadings() {
   try {
-    const response = await fetch(`${API_BASE_URL}/readings/`);
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error('Error fetching all readings:', error);
+    const res = await fetch(`${API_BASE_URL}/readings/`);
+    if (!res.ok) throw new Error(res.status);
+    return await res.json();
+  } catch (e) {
+    console.error("❌ Error fetching all readings:", e);
     return [];
   }
 }
 
-// Function to get color based on pH value (matches pH gauge ranges)
-function getPhColor(phValue) {
-  if (phValue < 6) return '#0072B2';        // Low pH - Blue
-  else if (phValue < 7) return '#56B4E9';   // Slightly acidic - Light Blue  
-  else if (phValue <= 8) return '#009E73';  // Optimal pH - Teal
-  else if (phValue <= 12) return '#E69F00'; // High pH - Orange
-  else return '#CC79A7';                    // Very High pH - Magenta
-}
+// ---------------------------------------
+// ECHARTS SETUP
+// ---------------------------------------
+const hours = Array.from({ length: 24 }, (_, i) => i + ":00");
 
-// Function to get color based on TDS value (matches TDS gauge ranges)  
-function getTdsColor(tdsValue) {
-  if (tdsValue < 650) return '#0072B2';      // Low TDS - Blue
-  else if (tdsValue < 750) return '#009E73'; // Moderate TDS - Teal
-  else if (tdsValue < 850) return '#E69F00'; // High TDS - Orange
-  else return '#CC79A7';                     // Very High TDS - Magenta
-}
+// default placeholders if DB empty
+const phData = Array(24).fill(6.0);
+const tdsData = Array(24).fill(700);
+const waterLevelData = Array(24).fill(30);
 
-// Function to get color based on water level (matches water status)
-function getWaterColor(waterLevel) {
-  return waterLevel > 5 ? '#009E73' : '#D55E00'; // Has water: Teal, No water: Red
-}
+// -------------------------
+// INITIALIZE LINE CHART
+// -------------------------
+const lineChart = echarts.init(document.getElementById('lineChart'));
 
-// updates gauge charts w live data
+const lineOption = {
+  title: {
+    text: '24-Hour Water System History',
+    left: 'center',
+    top: 10
+  },
+  tooltip: {
+    trigger: 'axis',
+    formatter: function (params) {
+      let out = params[0].axisValueLabel + "<br/>";
+      params.forEach(item => {
+        if (item.seriesName === "Water Status") {
+          out += `${item.marker}${item.seriesName}: ${item.value}<br/>`;
+        } else {
+          out += `${item.marker}${item.seriesName}: ${item.value}<br/>`;
+        }
+      });
+      return out;
+    }
+  },
+  legend: {
+    top: 40,
+    data: ['pH Level', 'TDS (ppm)', 'Water Status']
+  },
+  grid: { left: '8%', right: '8%', bottom: '10%', containLabel: true },
+  xAxis: { type: 'category', boundaryGap: false, data: hours },
+  yAxis: [
+    {
+      type: 'value',
+      name: 'pH Level',
+      min: 0,
+      max: 14,
+      position: 'left'
+    },
+    {
+      type: 'value',
+      name: 'TDS (ppm)',
+      position: 'right'
+    },
+    {
+      type: 'category',
+      name: 'Water Status',
+      position: 'right',
+      offset: 80,
+      data: ['No', 'Yes']
+    }
+  ],
+  series: [
+    {
+      name: 'pH Level',
+      type: 'line',
+      smooth: true,
+      yAxisIndex: 0,
+      data: phData
+    },
+    {
+      name: 'TDS (ppm)',
+      type: 'line',
+      smooth: true,
+      yAxisIndex: 1,
+      data: tdsData
+    },
+    {
+      name: 'Water Status',
+      type: 'line',
+      smooth: true,
+      yAxisIndex: 2,
+      data: waterLevelData.map(v => v > 50 ? "Yes" : "No")
+    }
+  ]
+};
+
+lineChart.setOption(lineOption);
+
+// ---------------------------------------
+// GAUGES
+// ---------------------------------------
+const phGauge = echarts.init(document.getElementById('phGaugeChart'));
+const tdsGauge = echarts.init(document.getElementById('tdsGaugeChart'));
+const waterGauge = echarts.init(document.getElementById('waterLevelGaugeChart'));
+
+phGauge.setOption({
+  series: [{
+    type: 'gauge',
+    startAngle: 180,
+    endAngle: 0,
+    min: 0,
+    max: 14,
+    data: [{ value: currentData.ph }]
+  }]
+});
+
+tdsGauge.setOption({
+  series: [{
+    type: 'gauge',
+    startAngle: 180,
+    endAngle: 0,
+    min: 500,
+    max: 900,
+    data: [{ value: currentData.tds }]
+  }]
+});
+
+waterGauge.setOption({
+  series: [{
+    type: 'gauge',
+    startAngle: 180,
+    endAngle: 0,
+    min: 0,
+    max: 1,
+    data: [{ value: waterStatusBinary(currentData.waterLevel) }]
+  }]
+});
+
+// ---------------------------------------
+// UPDATE GAUGE WITH LIVE DATA
+// ---------------------------------------
 function updateGaugeCharts(data) {
-  if (data) {
-    console.log("🔍 Received data:", data); // DEBUGGING - SEE WHAT'S COMING IN
-    
-    currentData.ph = data.ph_level;
-    currentData.tds = data.nutrient_level;
-    currentData.waterLevel = data.water_level;
-    
-    console.log("💧 Water level value:", currentData.waterLevel); // DEBUGGING - SEE WATER LEVEL
+  currentData.ph = data.ph_level;
+  currentData.tds = data.nutrient_level;
+  currentData.waterLevel = data.water_level;
 
-    // ph gauge
-    phGaugeChart.setOption({
-      series: [{
-        data: [{ value: currentData.ph, name: 'pH Level' }]
-      }]
-    });
+  phGauge.setOption({
+    series: [{ data: [{ value: currentData.ph }] }]
+  });
 
-    // tds
-    tdsGaugeChart.setOption({
-      series: [{
-        data: [{ value: currentData.tds, name: 'TDS (ppm)' }]
-      }]
-    });
+  tdsGauge.setOption({
+    series: [{ data: [{ value: currentData.tds }] }]
+  });
 
-    // water lvl - convert percentage to binary status (LOWERED threshold to 5%)
-    const waterStatus = currentData.waterLevel > 5 ? 1 : 0;
-    console.log("🚰 Water status (0=NO, 1=YES):", waterStatus); // DEBUGGING - SEE STATUS
-    
-    waterLevelGaugeChart.setOption({
-      series: [{
-        data: [{ value: waterStatus, name: 'Water Status' }]
-      }]
-    });
-  }
+  waterGauge.setOption({
+    series: [{
+      data: [{ value: waterStatusBinary(currentData.waterLevel) }]
+    }]
+  });
 }
 
-// updatds line chart w de historical data
+// ---------------------------------------
+// UPDATE LINE CHART WITH HISTORY
+// ---------------------------------------
 function updateLineChart(readings) {
-  if (readings && readings.length > 0) {
-    const last24 = readings.slice(-24);
-    
-    if (last24.length > 0) {
-      const timestamps = last24.map(reading => {
-        const date = new Date(reading.timestamp);
-        return `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
-      });
-      
-      const phValues = last24.map(reading => reading.ph_level);
-      const tdsValues = last24.map(reading => reading.nutrient_level);
-      const waterValues = last24.map(reading => reading.water_level);
-      const waterStatusValues = waterValues.map(value => value > 5 ? 'Yes' : 'No');
+  if (readings.length < 1) return;
 
-      lineChart.setOption({
-        xAxis: {
-          data: timestamps.length >= 24 ? timestamps : hours
-        },
-        series: [
-          { data: phValues.length >= 24 ? phValues : phData },
-          { data: tdsValues.length >= 24 ? tdsValues : tdsData },
-          { data: waterStatusValues.length >= 24 ? waterStatusValues : waterLevelData.map(value => value > 5 ? 'Yes' : 'No') }
-        ]
-      });
-    }
-  }
+  const last24 = readings.slice(-24);
+
+  const timestamps = last24.map(r => {
+    let d = new Date(r.timestamp);
+    return `${d.getHours()}:${d.getMinutes().toString().padStart(2, '0')}`;
+  });
+
+  lineChart.setOption({
+    xAxis: { data: timestamps },
+    series: [
+      { data: last24.map(r => r.ph_level) },
+      { data: last24.map(r => r.nutrient_level) },
+      { data: last24.map(r => (r.water_level > 50 ? "Yes" : "No")) }
+    ]
+  });
 }
 
-// initailizes data loading
+// ---------------------------------------
+// INITIALIZATION + LIVE LOOP
+// ---------------------------------------
 async function initializeCharts() {
-  console.log('📊 Initializing charts with live data...');
-  
-  const latestReading = await fetchLatestReading();
-  if (latestReading) {
-    updateGaugeCharts(latestReading);
-  }
+  const latest = await fetchLatestReading();
+  if (latest) updateGaugeCharts(latest);
 
-  const allReadings = await fetchAllReadings();
-  if (allReadings) {
-    updateLineChart(allReadings);
-  }
+  const history = await fetchAllReadings();
+  if (history) updateLineChart(history);
 
-  // sets up the periodic updates
   setInterval(async () => {
-    console.log('🔄 Updating charts with latest data...');
-    const latestReading = await fetchLatestReading();
-    if (latestReading) {
-      updateGaugeCharts(latestReading);
-    }
+    const latest = await fetchLatestReading();
+    if (latest) updateGaugeCharts(latest);
 
-    const allReadings = await fetchAllReadings();
-    if (allReadings) {
-      updateLineChart(allReadings);
-    }
+    const history = await fetchAllReadings();
+    if (history) updateLineChart(history);
   }, UPDATE_INTERVAL);
 }
 
-// window resize handler
-window.addEventListener('resize', function() {
-  lineChart.resize();
-  phGaugeChart.resize();
-  tdsGaugeChart.resize();
-  waterLevelGaugeChart.resize();
-});
-
 document.addEventListener('DOMContentLoaded', initializeCharts);
+
+window.addEventListener('resize', () => {
+  lineChart.resize();
+  phGauge.resize();
+  tdsGauge.resize();
+  waterGauge.resize();
+});
