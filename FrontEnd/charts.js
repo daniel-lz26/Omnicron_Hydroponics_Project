@@ -73,7 +73,7 @@ const lineChart = echarts.init(document.getElementById('lineChart'));
 
 const lineOption = {
   title: {
-    text: '24-Hour pH Level History',
+    text: '24-Hour pH & PPM History',
     left: 'center',
     top: 10
   },
@@ -82,31 +82,60 @@ const lineOption = {
     formatter: function (params) {
       let out = params[0].axisValueLabel + "<br/>";
       params.forEach(item => {
-        out += `${item.marker}${item.seriesName}: ${item.value}<br/>`;
+        if (item.seriesName === 'PPM (TDS)') {
+          out += `${item.marker}${item.seriesName}: ${item.value} ppm<br/>`;
+        } else {
+          out += `${item.marker}${item.seriesName}: ${item.value}<br/>`;
+        }
       });
       return out;
     }
   },
   legend: {
     top: 40,
-    data: ['pH Level']
+    data: ['pH Level', 'PPM (TDS)']
   },
-  grid: { left: '8%', right: '8%', bottom: '10%', containLabel: true },
+  grid: { left: '8%', right: '12%', bottom: '10%', containLabel: true },
   xAxis: { type: 'category', boundaryGap: false, data: hours },
-  yAxis: {
-    type: 'value',
-    name: 'pH Level',
-    min: 0,
-    max: 14,
-    position: 'left'
-  },
+  yAxis: [
+    {
+      type: 'value',
+      name: 'pH Level',
+      min: 0,
+      max: 14,
+      position: 'left',
+      axisLabel: {
+        formatter: '{value}'
+      }
+    },
+    {
+      type: 'value',
+      name: 'PPM (TDS)',
+      min: 0,
+      max: 2000,
+      position: 'right',
+      axisLabel: {
+        formatter: '{value} ppm'
+      }
+    }
+  ],
   series: [
     {
       name: 'pH Level',
       type: 'line',
       smooth: true,
+      yAxisIndex: 0,
       itemStyle: { color: '#0072B2' }, // colorblind-friendly blue
-      lineStyle: { color: '#0072B2' },
+      lineStyle: { color: '#0072B2', width: 2 },
+      data: []
+    },
+    {
+      name: 'PPM (TDS)',
+      type: 'line',
+      smooth: true,
+      yAxisIndex: 1,
+      itemStyle: { color: '#009E73' }, // colorblind-friendly green
+      lineStyle: { color: '#009E73', width: 2 },
       data: []
     }
   ]
@@ -295,7 +324,8 @@ function updateLineChart(readings) {
   lineChart.setOption({
     xAxis: { data: timestamps },
     series: [
-      { data: last24.map(r => r.ph_level) }
+      { data: last24.map(r => r.ph_level) },
+      { data: last24.map(r => r.nutrient_level) }
     ]
   });
 }
