@@ -29,7 +29,7 @@ app.add_middleware(
 @app.post("/readings/", response_model=schemas.ProbeReadingResponse)
 def create_reading(reading: schemas.ProbeReadingCreate, db: Session = Depends(get_db)):
 
-    # Ensure water_level is stored as float
+    # Convert water level to float
     try:
         reading.water_level = float(reading.water_level)
     except:
@@ -37,7 +37,6 @@ def create_reading(reading: schemas.ProbeReadingCreate, db: Session = Depends(ge
 
     print(f"Water % Received: {reading.water_level}")
 
-    # Save to DB
     return crud.create_probe_reading(db=db, reading=reading)
 
 
