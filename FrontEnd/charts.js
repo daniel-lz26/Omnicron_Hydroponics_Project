@@ -4,11 +4,11 @@
 const API_BASE_URL = 'https://omnicronhydroponicsproject-production.up.railway.app';
 const UPDATE_INTERVAL = 30000; // 30 sec refresh
 
-// current live data defaults
+// current live data (no defaults - waits for API)
 let currentData = {
-  ph: 6.5,
-  tds: 700,
-  waterLevel: 75
+  ph: null,
+  tds: null,
+  waterLevel: null
 };
 
 // ---------------------------------------
@@ -62,11 +62,6 @@ async function fetchAllReadings() {
 // ---------------------------------------
 const hours = Array.from({ length: 24 }, (_, i) => i + ":00");
 
-// default placeholders if DB empty
-const phData = Array(24).fill(6.0);
-const tdsData = Array(24).fill(700);
-const waterLevelData = Array(24).fill(30);
-
 // -------------------------
 // INITIALIZE LINE CHART
 // -------------------------
@@ -74,7 +69,7 @@ const lineChart = echarts.init(document.getElementById('lineChart'));
 
 const lineOption = {
   title: {
-    text: '24-Hour Water System History',
+    text: '24-Hour pH Level History',
     left: 'center',
     top: 10
   },
@@ -83,63 +78,32 @@ const lineOption = {
     formatter: function (params) {
       let out = params[0].axisValueLabel + "<br/>";
       params.forEach(item => {
-        if (item.seriesName === "Water Status") {
-          out += `${item.marker}${item.seriesName}: ${item.value}<br/>`;
-        } else {
-          out += `${item.marker}${item.seriesName}: ${item.value}<br/>`;
-        }
+        out += `${item.marker}${item.seriesName}: ${item.value}<br/>`;
       });
       return out;
     }
   },
   legend: {
     top: 40,
-    data: ['pH Level', 'TDS (ppm)', 'Water Status']
+    data: ['pH Level']
   },
   grid: { left: '8%', right: '8%', bottom: '10%', containLabel: true },
   xAxis: { type: 'category', boundaryGap: false, data: hours },
-  yAxis: [
-    {
-      type: 'value',
-      name: 'pH Level',
-      min: 0,
-      max: 14,
-      position: 'left'
-    },
-    {
-      type: 'value',
-      name: 'TDS (ppm)',
-      position: 'right'
-    },
-    {
-      type: 'category',
-      name: 'Water Status',
-      position: 'right',
-      offset: 80,
-      data: ['No', 'Yes']
-    }
-  ],
+  yAxis: {
+    type: 'value',
+    name: 'pH Level',
+    min: 0,
+    max: 14,
+    position: 'left'
+  },
   series: [
     {
       name: 'pH Level',
       type: 'line',
       smooth: true,
-      yAxisIndex: 0,
-      data: phData
-    },
-    {
-      name: 'TDS (ppm)',
-      type: 'line',
-      smooth: true,
-      yAxisIndex: 1,
-      data: tdsData
-    },
-    {
-      name: 'Water Status',
-      type: 'line',
-      smooth: true,
-      yAxisIndex: 2,
-      data: waterLevelData.map(v => v > 50 ? "Yes" : "No")
+      itemStyle: { color: '#0072B2' }, // colorblind-friendly blue
+      lineStyle: { color: '#0072B2' },
+      data: []
     }
   ]
 };
@@ -160,7 +124,31 @@ phGauge.setOption({
     endAngle: 0,
     min: 0,
     max: 14,
-    data: [{ value: currentData.ph }]
+    splitNumber: 7,
+    axisLine: {
+      lineStyle: {
+        width: 20,
+        color: [
+          [0.35, '#D55E00'],  // red (acidic)
+          [0.5, '#E69F00'],   // orange (slightly acidic)
+          [0.65, '#009E73'],  // green (neutral/optimal)
+          [0.8, '#E69F00'],   // orange (slightly alkaline)
+          [1, '#D55E00']      // red (alkaline)
+        ]
+      }
+    },
+    axisTick: { distance: -20, length: 8 },
+    axisLabel: { distance: -35, fontSize: 12 },
+    detail: {
+      formatter: '{value}',
+      fontSize: 20,
+      offsetCenter: [0, '70%']
+    },
+    title: {
+      offsetCenter: [0, '90%'],
+      fontSize: 14
+    },
+    data: [{ value: 0, name: 'pH Level' }]
   }]
 });
 
@@ -169,9 +157,33 @@ tdsGauge.setOption({
     type: 'gauge',
     startAngle: 180,
     endAngle: 0,
-    min: 500,
-    max: 900,
-    data: [{ value: currentData.tds }]
+    min: 0,
+    max: 2000,
+    splitNumber: 8,
+    axisLine: {
+      lineStyle: {
+        width: 20,
+        color: [
+          [0.25, '#D55E00'],  // red (very low)
+          [0.4, '#E69F00'],   // orange (low)
+          [0.7, '#009E73'],   // green (optimal 500-1400)
+          [0.85, '#E69F00'],  // orange (high)
+          [1, '#D55E00']      // red (very high)
+        ]
+      }
+    },
+    axisTick: { distance: -20, length: 8 },
+    axisLabel: { distance: -35, fontSize: 12 },
+    detail: {
+      formatter: '{value} ppm',
+      fontSize: 18,
+      offsetCenter: [0, '70%']
+    },
+    title: {
+      offsetCenter: [0, '90%'],
+      fontSize: 14
+    },
+    data: [{ value: 0, name: 'PPM (TDS)' }]
   }]
 });
 
@@ -182,7 +194,37 @@ waterGauge.setOption({
     endAngle: 0,
     min: 0,
     max: 1,
-    data: [{ value: waterStatusBinary(currentData.waterLevel) }]
+    splitNumber: 1,
+    axisLine: {
+      lineStyle: {
+        width: 20,
+        color: [
+          [0.5, '#D55E00'],   // red (no water)
+          [1, '#009E73']      // green (water detected)
+        ]
+      }
+    },
+    axisTick: { show: false },
+    axisLabel: {
+      distance: -35,
+      fontSize: 12,
+      formatter: function(value) {
+        return value === 0 ? 'No' : 'Yes';
+      }
+    },
+    detail: {
+      formatter: function(value) {
+        return value === 1 ? 'WATER' : 'NO WATER';
+      },
+      fontSize: 18,
+      offsetCenter: [0, '70%'],
+      color: 'auto'
+    },
+    title: {
+      offsetCenter: [0, '90%'],
+      fontSize: 14
+    },
+    data: [{ value: 0, name: 'Water Status' }]
   }]
 });
 
@@ -190,21 +232,30 @@ waterGauge.setOption({
 // UPDATE GAUGE WITH LIVE DATA
 // ---------------------------------------
 function updateGaugeCharts(data) {
+  if (!data || data.ph_level === undefined || data.nutrient_level === undefined || data.water_level === undefined) {
+    console.warn("⚠️ Invalid or incomplete data received:", data);
+    return;
+  }
+
   currentData.ph = data.ph_level;
   currentData.tds = data.nutrient_level;
   currentData.waterLevel = data.water_level;
 
   phGauge.setOption({
-    series: [{ data: [{ value: currentData.ph }] }]
+    series: [{
+      data: [{ value: currentData.ph, name: 'pH Level' }]
+    }]
   });
 
   tdsGauge.setOption({
-    series: [{ data: [{ value: currentData.tds }] }]
+    series: [{
+      data: [{ value: currentData.tds, name: 'PPM (TDS)' }]
+    }]
   });
 
   waterGauge.setOption({
     series: [{
-      data: [{ value: waterStatusBinary(currentData.waterLevel) }]
+      data: [{ value: waterStatusBinary(currentData.waterLevel), name: 'Water Status' }]
     }]
   });
 }
@@ -225,9 +276,7 @@ function updateLineChart(readings) {
   lineChart.setOption({
     xAxis: { data: timestamps },
     series: [
-      { data: last24.map(r => r.ph_level) },
-      { data: last24.map(r => r.nutrient_level) },
-      { data: last24.map(r => (r.water_level > 50 ? "Yes" : "No")) }
+      { data: last24.map(r => r.ph_level) }
     ]
   });
 }
