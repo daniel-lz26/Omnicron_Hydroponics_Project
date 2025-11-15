@@ -30,25 +30,36 @@ let activeAlerts = new Set();
 function checkAlerts(data) {
   const newAlerts = [];
 
-  // Check Water Level
-  if (data.water_level < THRESHOLDS.water.critical) {
+  // Debug logging
+  console.log('🔍 Checking alerts with data:', {
+    water_level: data.water_level,
+    nutrient_level: data.nutrient_level,
+    ph_level: data.ph_level
+  });
+
+  // Check Water Level - EXPLICIT CHECK
+  const waterLevel = parseFloat(data.water_level);
+
+  if (waterLevel < THRESHOLDS.water.critical) {
     newAlerts.push({
       id: 'water-critical',
       type: 'critical',
       icon: '🚨',
-      title: 'CRITICAL: OUT OF WATER',
-      message: `Water level: ${data.water_level.toFixed(1)}% - Refill immediately!`,
-      value: data.water_level
+      title: 'CRITICAL: NO WATER DETECTED',
+      message: `Water level is at ${waterLevel.toFixed(1)}% - System needs water immediately!`,
+      value: waterLevel
     });
-  } else if (data.water_level < THRESHOLDS.water.warning) {
+    console.log('🚨 CRITICAL ALERT: NO WATER!');
+  } else if (waterLevel < THRESHOLDS.water.warning) {
     newAlerts.push({
       id: 'water-warning',
       type: 'warning',
       icon: '⚠️',
       title: 'Low Water Level',
-      message: `Water level: ${data.water_level.toFixed(1)}% - Consider refilling soon`,
-      value: data.water_level
+      message: `Water level: ${waterLevel.toFixed(1)}% - Consider refilling soon`,
+      value: waterLevel
     });
+    console.log('⚠️ WARNING: Low water');
   }
 
   // Check PPM (Nutrient Level)
@@ -196,11 +207,17 @@ async function monitorSystemAlerts() {
     updateAlertsDisplay(alerts);
 
     // Log to console for debugging
-    console.log(`📊 Alert Check: ${alerts.length} active alert(s)`, {
-      water: data.water_level,
+    console.log(`📊 Alert Check Complete:`, {
+      totalAlerts: alerts.length,
+      water_level: data.water_level + '%',
       ppm: data.nutrient_level,
-      ph: data.ph_level
+      ph: data.ph_level,
+      alerts: alerts.map(a => a.title)
     });
+
+    if (alerts.length > 0) {
+      console.log('⚠️ ACTIVE ALERTS:', alerts);
+    }
 
   } catch (error) {
     console.error('❌ Error checking alerts:', error);
