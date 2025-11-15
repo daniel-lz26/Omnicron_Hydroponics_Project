@@ -25,11 +25,24 @@ const lineOption = {
    top: 10
  }, //shows data when we hover hover the chart
  tooltip: {
-   trigger: 'axis'
+   trigger: 'axis',
+   formatter: function (params) {
+     let result = params[0].axisValueLabel + '<br/>';
+     params.forEach(function (item) {
+       if (item.seriesName === 'Water Status') {
+         result += item.marker + item.seriesName + ': ' + item.value + '<br/>';
+       } else if (item.seriesName === 'pH Level') {
+         result += item.marker + item.seriesName + ': ' + item.value.toFixed(1) + '<br/>';
+       } else if (item.seriesName === 'TDS (ppm)') {
+         result += item.marker + item.seriesName + ': ' + item.value.toFixed(0) + '<br/>';
+       }
+     });
+     return result;
+   }
  },
  legend: { //show/hide lines that are on the chart
    top: 40,
-   data: ['pH Level', 'TDS (ppm)', 'Water Level (%)']
+   data: ['pH Level', 'TDS (ppm)', 'Water Status']
  },
  grid: {//spacing
    left: '8%',
@@ -45,7 +58,7 @@ const lineOption = {
    nameLocation: 'middle',
    nameGap: 30
  },
- yAxis: [// left is ph and right is tds
+ yAxis: [// left is ph, middle is tds, right is water status
    {
      type: 'value',
      name: 'pH Level',
@@ -61,10 +74,23 @@ const lineOption = {
    },
    {
      type: 'value',
-     name: 'TDS / Water Level',
+     name: 'TDS (ppm)',
      position: 'right',
      axisLine: {
        lineStyle: { color: '#FF6E76' }
+     },
+     axisLabel: {
+       formatter: '{value}'
+     }
+   },
+   {
+     type: 'category',
+     name: 'Water Status',
+     position: 'right',
+     offset: 80,
+     data: ['No', 'Yes'],
+     axisLine: {
+       lineStyle: { color: '#009E73' }
      },
      axisLabel: {
        formatter: '{value}'
@@ -101,17 +127,17 @@ const lineOption = {
      }
    },
    {
-     name: 'Water Level (%)',
+     name: 'Water Status',
      type: 'line',
      smooth: true,
-     yAxisIndex: 1,
-     data: waterLevelData,
+     yAxisIndex: 2,
+     data: waterLevelData.map(value => value > 20 ? 'Yes' : 'No'),
      lineStyle: {
        width: 3,
-       color: '#7CFFB2'
+       color: getWaterColor(currentData.waterLevel)
      },
      areaStyle: {
-       color: 'rgba(124,255,178,0.1)'
+       color: 'rgba(0,158,115,0.1)'
      }
    }
  ]
@@ -270,17 +296,14 @@ const waterLevelGaugeOption = {
       center: ['50%', '75%'],
       radius: '90%',
       min: 0,
-      max: 100,
-      splitNumber: 10,
+      max: 1,
+      splitNumber: 2,
       axisLine: {
         lineStyle: {
           width: 10,
           color: [
-            [0.40, '#0072B2'],  // Low
-            [0.60, '#56B4E9'],  // OK
-            [0.80, '#009E73'],  // Ideal
-            [0.90, '#E69F00'],  // High
-            [1.00, '#CC79A7']   // Very High
+            [0.5, '#D55E00'],   // No Water - Red
+            [1.0, '#009E73']    // Has Water - Green
           ]
         }
       },
@@ -301,30 +324,30 @@ const waterLevelGaugeOption = {
       },
       axisLabel: {
         color: '#222',
-        fontSize: 16,
+        fontSize: 14,
         distance: -55,
         fontWeight: 'bold',
         formatter: function (value) {
-          return value % 20 === 0 ? value : '';
+          return value === 0 ? 'NO' : value === 1 ? 'YES' : '';
         }
       },
       title: {
         offsetCenter: [0, '-10%'],
         fontSize: 20,
         color: '#222',
-        text: 'Water Level (%)'
+        text: 'Water Status'
       },
       detail: {
-        fontSize: 32,
+        fontSize: 28,
         offsetCenter: [0, '-35%'],
         fontWeight: 'bold',
         valueAnimation: true,
         formatter: function (value) {
-          return value.toFixed(0) + '%';
+          return value === 0 ? 'NO WATER' : 'HAS WATER';
         },
         color: '#222'
       },
-      data: [{ value: currentData.waterLevel, name: 'Water Level' }]
+      data: [{ value: currentData.waterLevel > 20 ? 1 : 0, name: 'Water Status' }]
     }
   ]
 };
@@ -363,6 +386,28 @@ async function fetchAllReadings() {
   }
 }
 
+// Function to get color based on pH value (matches pH gauge ranges)
+function getPhColor(phValue) {
+  if (phValue < 6) return '#0072B2';        // Low pH - Blue
+  else if (phValue < 7) return '#56B4E9';   // Slightly acidic - Light Blue  
+  else if (phValue <= 8) return '#009E73';  // Optimal pH - Teal
+  else if (phValue <= 12) return '#E69F00'; // High pH - Orange
+  else return '#CC79A7';                    // Very High pH - Magenta
+}
+
+// Function to get color based on TDS value (matches TDS gauge ranges)  
+function getTdsColor(tdsValue) {
+  if (tdsValue < 650) return '#0072B2';      // Low TDS - Blue
+  else if (tdsValue < 750) return '#009E73'; // Moderate TDS - Teal
+  else if (tdsValue < 850) return '#E69F00'; // High TDS - Orange
+  else return '#CC79A7';                     // Very High TDS - Magenta
+}
+
+// Function to get color based on water level (matches water status)
+function getWaterColor(waterLevel) {
+  return waterLevel > 20 ? '#009E73' : '#D55E00'; // Has water: Teal, No water: Red
+}
+
 // updates gauge charts w live data
 function updateGaugeCharts(data) {
   if (data) {
@@ -384,12 +429,16 @@ function updateGaugeCharts(data) {
       }]
     });
 
-    // water lvl
+    // water lvl - convert percentage to binary status (threshold at 20%)
+    const waterStatus = currentData.waterLevel > 20 ? 1 : 0;
     waterLevelGaugeChart.setOption({
       series: [{
-        data: [{ value: currentData.waterLevel, name: 'Water Level' }]
+        data: [{ value: waterStatus, name: 'Water Status' }]
       }]
     });
+
+    // Update line chart colors based on current gauge values
+    updateLineChartColors();
   }
 }
 
@@ -407,6 +456,7 @@ function updateLineChart(readings) {
       const phValues = last24.map(reading => reading.ph_level);
       const tdsValues = last24.map(reading => reading.nutrient_level);
       const waterValues = last24.map(reading => reading.water_level);
+      const waterStatusValues = waterValues.map(value => value > 20 ? 'Yes' : 'No');
 
       lineChart.setOption({
         xAxis: {
@@ -415,7 +465,7 @@ function updateLineChart(readings) {
         series: [
           { data: phValues.length >= 24 ? phValues : phData },
           { data: tdsValues.length >= 24 ? tdsValues : tdsData },
-          { data: waterValues.length >= 24 ? waterValues : waterLevelData }
+          { data: waterStatusValues.length >= 24 ? waterStatusValues : waterLevelData.map(value => value > 20 ? 'Yes' : 'No') }
         ]
       });
     }
