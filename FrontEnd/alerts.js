@@ -44,12 +44,12 @@ function checkAlerts(data) {
     newAlerts.push({
       id: 'water-critical',
       type: 'critical',
-      icon: '🚨',
+      icon: '💧',
       title: 'CRITICAL: NO WATER DETECTED',
       message: `Water level is at ${waterLevel.toFixed(1)}% - System needs water immediately!`,
       value: waterLevel
     });
-    console.log('🚨 CRITICAL ALERT: NO WATER!');
+    console.log('💧 CRITICAL ALERT: NO WATER!');
   } else if (waterLevel < THRESHOLDS.water.warning) {
     newAlerts.push({
       id: 'water-warning',
@@ -67,7 +67,7 @@ function checkAlerts(data) {
     newAlerts.push({
       id: 'ppm-critical-low',
       type: 'critical',
-      icon: '🚨',
+      icon: '📊',
       title: 'CRITICAL: PPM Too Low',
       message: `PPM: ${data.nutrient_level.toFixed(0)} ppm - Add nutrients immediately!`,
       value: data.nutrient_level
@@ -85,7 +85,7 @@ function checkAlerts(data) {
     newAlerts.push({
       id: 'ppm-critical-high',
       type: 'critical',
-      icon: '🚨',
+      icon: '📊',
       title: 'CRITICAL: PPM Too High',
       message: `PPM: ${data.nutrient_level.toFixed(0)} ppm - Dilute solution immediately!`,
       value: data.nutrient_level
@@ -106,7 +106,7 @@ function checkAlerts(data) {
     newAlerts.push({
       id: 'ph-critical-low',
       type: 'critical',
-      icon: '🚨',
+      icon: '🧪',
       title: 'CRITICAL: pH Too Low (Acidic)',
       message: `pH: ${data.ph_level.toFixed(2)} - Adjust pH immediately!`,
       value: data.ph_level
@@ -124,7 +124,7 @@ function checkAlerts(data) {
     newAlerts.push({
       id: 'ph-critical-high',
       type: 'critical',
-      icon: '🚨',
+      icon: '🧪',
       title: 'CRITICAL: pH Too High (Alkaline)',
       message: `pH: ${data.ph_level.toFixed(2)} - Adjust pH immediately!`,
       value: data.ph_level
