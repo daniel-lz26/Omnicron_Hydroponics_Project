@@ -1,6 +1,6 @@
-# app/models.py
+from app.database import Base app/models.py
 from sqlalchemy import Column, Integer, Float, DateTime
-from database import Base
+from app.database import Base
 
 
 class ProbeReading(Base):
