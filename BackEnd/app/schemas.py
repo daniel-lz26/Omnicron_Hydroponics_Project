@@ -4,7 +4,7 @@ from datetime import datetime
 
 
 class ProbeReadingBase(BaseModel):
-    water_level: float
+    water_level: str
     nutrient_level: float
     ph_level: float
 
