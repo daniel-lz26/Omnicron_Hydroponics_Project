@@ -45,40 +45,25 @@
    <div id="dashboard-section" class="page-section">
       <h2 data-aos="fade-right" data-aos-duration="1000">dashboard.</h2>
 
-      <!-- Manual Test Controls -->
+      <!-- Manual Pump Control -->
       <div class="test-controls-container"
            data-aos="fade-up"
            data-aos-duration="1000"
            data-aos-delay="300">
-         <h3>Manual Test Controls</h3>
+         <h3>Manual Pump Control</h3>
          <p class="test-warning">⚠️ Testing Mode - Use for manual testing only</p>
 
-         <div class="control-group">
-            <div class="control-card">
-               <h4>💧 Water Pump</h4>
-               <div class="button-group">
-                  <button id="pump-on-btn" class="control-btn pump-on" onclick="controlDevice('pump', 'on')">
-                     <span class="btn-icon">▶</span> Pump ON
-                  </button>
-                  <button id="pump-off-btn" class="control-btn pump-off" onclick="controlDevice('pump', 'off')">
-                     <span class="btn-icon">⏸</span> Pump OFF
-                  </button>
-               </div>
-               <div id="pump-status" class="status-indicator">Status: <span>Idle</span></div>
+         <div class="control-card-single">
+            <h4>💧 Water Pump</h4>
+            <div class="button-group">
+               <button id="pump-on-btn" class="control-btn pump-on" onclick="controlDevice('pump', 'on')">
+                  <span class="btn-icon">▶</span> Pump ON
+               </button>
+               <button id="pump-off-btn" class="control-btn pump-off" onclick="controlDevice('pump', 'off')">
+                  <span class="btn-icon">⏸</span> Pump OFF
+               </button>
             </div>
-
-            <div class="control-card">
-               <h4>💦 Nutrient Spray</h4>
-               <div class="button-group">
-                  <button id="spray-on-btn" class="control-btn spray-on" onclick="controlDevice('spray', 'on')">
-                     <span class="btn-icon">▶</span> Spray ON
-                  </button>
-                  <button id="spray-off-btn" class="control-btn spray-off" onclick="controlDevice('spray', 'off')">
-                     <span class="btn-icon">⏸</span> Spray OFF
-                  </button>
-               </div>
-               <div id="spray-status" class="status-indicator">Status: <span>Idle</span></div>
-            </div>
+            <div id="pump-status" class="status-indicator">Status: <span>Idle</span></div>
          </div>
       </div>
    </div>
