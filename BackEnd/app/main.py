@@ -29,24 +29,17 @@ app.add_middleware(
 @app.post("/readings/", response_model=schemas.ProbeReadingResponse)
 def create_reading(reading: schemas.ProbeReadingCreate, db: Session = Depends(get_db)):
 
-    # Incoming water_level is a string percentage from the Pi, convert to float
+    # Ensure water_level is stored as float
     try:
-        percent = float(reading.water_level)
+        reading.water_level = float(reading.water_level)
     except:
-        percent = 0.0   # fallback if malformed data comes in
+        reading.water_level = 0.0
 
-    # Convert % → text status
-    if percent < 5:
-        reading.water_level = "OUT OF WATER"
-    elif percent > 67:
-        reading.water_level = "IN WATER"
-    else:
-        reading.water_level = "MID LEVEL"
-
-    print(f"Water % Received: {percent} → Saved as: {reading.water_level}")
+    print(f"Water % Received: {reading.water_level}")
 
     # Save to DB
     return crud.create_probe_reading(db=db, reading=reading)
+
 
 
 # =============================
