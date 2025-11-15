@@ -44,6 +44,19 @@
 
    <div id="dashboard-section" class="page-section">
       <h2 data-aos="fade-right" data-aos-duration="1000">dashboard.</h2>
+
+      <!-- System Alerts -->
+      <div class="alerts-container"
+           data-aos="fade-up"
+           data-aos-duration="1000"
+           data-aos-delay="300">
+         <h3>System Alerts</h3>
+         <div id="alerts-list" class="alerts-list">
+            <div class="alert-placeholder">
+               <span class="checkmark">✓</span> All systems normal
+            </div>
+         </div>
+      </div>
    </div>
 
    <div id="analytics-section" class="page-section">
@@ -111,6 +124,7 @@
 
    <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
    <script src="charts.js"></script>
+   <script src="alerts.js"></script>
    <script src="main.js"></script>
    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
    <script>
