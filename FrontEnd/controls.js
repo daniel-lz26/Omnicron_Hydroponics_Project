@@ -74,9 +74,14 @@ function showNotification(message, type = 'info') {
   }, 3000);
 }
 
+// Expose to window scope so onclick handlers can access it
+window.controlDevice = controlDevice;
+window.showNotification = showNotification;
+
 // Initialize - Add event listeners on page load
 document.addEventListener('DOMContentLoaded', function() {
   console.log('🎮 Device controls initialized');
+  console.log('✅ controlDevice function available globally');
 
   // Optional: Add keyboard shortcuts
   document.addEventListener('keydown', function(e) {

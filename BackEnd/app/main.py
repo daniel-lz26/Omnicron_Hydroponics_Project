@@ -22,6 +22,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# =============================
+# PUMP STATE STORAGE (In-Memory)
+# =============================
+pump_state = {
+    "status": "off",      # "on" or "off"
+    "last_updated": None,
+    "requested_by": "system"
+}
+
 
 # =============================
 # CREATE NEW READING (POST)
@@ -69,31 +78,55 @@ def get_stats(db: Session = Depends(get_db)):
 
 
 # =============================
-# MANUAL CONTROL ENDPOINTS (TEST)
+# MANUAL PUMP CONTROL ENDPOINTS
 # =============================
 @app.post("/pump/on")
 def pump_on():
-    """Turn pump ON - Placeholder for GPIO control"""
-    # TODO: Add actual GPIO/relay control when hardware is connected
-    # Example: GPIO.output(PUMP_PIN, GPIO.HIGH)
+    """Turn pump ON - Updates state for Pi to read"""
+    from datetime import datetime
+
+    pump_state["status"] = "on"
+    pump_state["last_updated"] = datetime.now().isoformat()
+    pump_state["requested_by"] = "web_ui"
+
     print("🔵 PUMP ON - Manual control activated")
+    print(f"   State updated: {pump_state}")
+
     return {
         "status": "success",
         "device": "pump",
         "action": "on",
-        "message": "Pump turned ON (simulated)"
+        "message": "Pump turned ON",
+        "current_state": pump_state
     }
 
 
 @app.post("/pump/off")
 def pump_off():
-    """Turn pump OFF - Placeholder for GPIO control"""
-    # TODO: Add actual GPIO/relay control when hardware is connected
-    # Example: GPIO.output(PUMP_PIN, GPIO.LOW)
+    """Turn pump OFF - Updates state for Pi to read"""
+    from datetime import datetime
+
+    pump_state["status"] = "off"
+    pump_state["last_updated"] = datetime.now().isoformat()
+    pump_state["requested_by"] = "web_ui"
+
     print("🔴 PUMP OFF - Manual control deactivated")
+    print(f"   State updated: {pump_state}")
+
     return {
         "status": "success",
         "device": "pump",
         "action": "off",
-        "message": "Pump turned OFF (simulated)"
+        "message": "Pump turned OFF",
+        "current_state": pump_state
+    }
+
+
+@app.get("/pump/status")
+def get_pump_status():
+    """Get current pump status - Pi polls this endpoint"""
+    return {
+        "status": pump_state["status"],
+        "last_updated": pump_state["last_updated"],
+        "requested_by": pump_state["requested_by"]
     }
