@@ -14,25 +14,26 @@ let currentData = {
 // ---------------------------------------
 // WATER STATUS HELPERS
 // ---------------------------------------
+// Note: water_level comes as decimal 0.0-1.0 (e.g., 0.5 = 50%)
 function getWaterStatus(level) {
-  if (level < 7) return "OUT OF WATER";
-  if (level > 50) return "IN WATER";
+  if (level < 0.07) return "OUT OF WATER";  // < 7%
+  if (level > 0.50) return "IN WATER";      // > 50%
   return "MID LEVEL";
 }
 
 // gauge needs binary: 0 = no water, 1 = water
-// water detected if level > 50%, no water if level < 7%
+// water detected if level > 0.50 (50%), no water if level < 0.07 (7%)
 function waterStatusBinary(level) {
-  if (level < 7) return 0;  // No water
-  if (level > 50) return 1;  // Water detected
+  if (level < 0.07) return 0;  // No water (< 7%)
+  if (level > 0.50) return 1;  // Water detected (> 50%)
   return 0;  // Default to no water for mid-range
 }
 
 // color for line chart + gauge
 function getWaterColor(level) {
-  if (level < 7) return '#D55E00';   // red
-  if (level > 50) return '#009E73';  // green
-  return '#E69F00';                  // orange
+  if (level < 0.07) return '#D55E00';   // red (< 7%)
+  if (level > 0.50) return '#009E73';   // green (> 50%)
+  return '#E69F00';                     // orange (mid-level)
 }
 
 // ---------------------------------------
