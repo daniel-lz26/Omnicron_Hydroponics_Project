@@ -111,12 +111,13 @@ nav button:hover {
   font-size: 15px;
   cursor: pointer;
   display: inline-block;
+  transition: all 0.3s ease;
+  transform: scale(1);
 }
 
 .github-button:hover {
   background-color: #1cd760;
-  padding: 10px 25px;
-  font-size: 18px;
+  transform: scale(1.1);
 }
 
 .gauges-container {
