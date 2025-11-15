@@ -21,8 +21,11 @@ function getWaterStatus(level) {
 }
 
 // gauge needs binary: 0 = no water, 1 = water
+// water detected if level > 50%, no water if level < 7%
 function waterStatusBinary(level) {
-  return level > 50 ? 1 : 0;
+  if (level < 7) return 0;  // No water
+  if (level > 50) return 1;  // Water detected
+  return 0;  // Default to no water for mid-range
 }
 
 // color for line chart + gauge
@@ -237,9 +240,24 @@ function updateGaugeCharts(data) {
     return;
   }
 
+  // Debug: Log raw API data
+  console.log("📊 Raw API Data:", {
+    ph_level: data.ph_level,
+    nutrient_level: data.nutrient_level,
+    water_level: data.water_level
+  });
+
   currentData.ph = data.ph_level;
   currentData.tds = data.nutrient_level;
   currentData.waterLevel = data.water_level;
+
+  // Debug: Log what we're sending to each gauge
+  console.log("🎯 Gauge Updates:", {
+    "pH Gauge (should be 0-14)": currentData.ph,
+    "TDS Gauge (should be 500-2000 ppm)": currentData.tds,
+    "Water Gauge (should be 0 or 1)": waterStatusBinary(currentData.waterLevel),
+    "Water Level Raw (%)": currentData.waterLevel
+  });
 
   phGauge.setOption({
     series: [{
