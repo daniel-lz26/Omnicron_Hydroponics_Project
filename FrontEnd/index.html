@@ -44,28 +44,6 @@
 
    <div id="dashboard-section" class="page-section">
       <h2 data-aos="fade-right" data-aos-duration="1000">dashboard.</h2>
-
-      <!-- Manual Pump Control -->
-      <div class="test-controls-container"
-           data-aos="fade-up"
-           data-aos-duration="1000"
-           data-aos-delay="300">
-         <h3>Manual Pump Control</h3>
-         <p class="test-warning">⚠️ Testing Mode - Use for manual testing only</p>
-
-         <div class="control-card-single">
-            <h4>💧 Water Pump</h4>
-            <div class="button-group">
-               <button id="pump-on-btn" class="control-btn pump-on" onclick="controlDevice('pump', 'on')">
-                  <span class="btn-icon">▶</span> Pump ON
-               </button>
-               <button id="pump-off-btn" class="control-btn pump-off" onclick="controlDevice('pump', 'off')">
-                  <span class="btn-icon">⏸</span> Pump OFF
-               </button>
-            </div>
-            <div id="pump-status" class="status-indicator">Status: <span>Idle</span></div>
-         </div>
-      </div>
    </div>
 
    <div id="analytics-section" class="page-section">
@@ -133,7 +111,6 @@
 
    <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
    <script src="charts.js"></script>
-   <script src="controls.js"></script>
    <script src="main.js"></script>
    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
    <script>
