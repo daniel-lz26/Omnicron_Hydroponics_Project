@@ -30,6 +30,22 @@ function getWaterColor(level) {
   return '#E69F00';                  
 }
 
+// updates the "Last Updated" text under the line chart
+function updateLastUpdated(timestamp) {
+  const el = document.getElementById("last-updated");
+  if (!el) return;
+
+  const date = new Date(timestamp);
+  const timeStr = date.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit"
+  });
+
+  el.textContent = `Last updated: ${timeStr}`;
+}
+
+
 // fetch functions
 
 async function fetchLatestReading() {
@@ -245,6 +261,8 @@ function updateGaugeCharts(data) {
   currentData.ph = data.ph_level;
   currentData.tds = data.nutrient_level;
   currentData.waterLevel = data.water_level;
+  updateLastUpdated(data.timestamp);
+
 
   // Debug: Log what we're sending to each gauge
   console.log("🎯 Gauge Updates:", {
@@ -273,6 +291,7 @@ function updateGaugeCharts(data) {
     ]
   }]
 });
+
 
 }
 
