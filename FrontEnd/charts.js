@@ -277,23 +277,41 @@ function updateGaugeCharts(data) {
 function updateLineChart(readings) {
   if (!readings || readings.length === 0) return;
 
-  // Use last 100 readings (smooth + real-time)
-  const limit = 100;
+  const limit = 150; // or 100 — your choice
   const subset = readings.slice(-limit);
 
   const timestamps = subset.map(r => {
-    let d = new Date(r.timestamp);
-    return `${d.getHours()}:${d.getMinutes().toString().padStart(2, '0')}:${d.getSeconds().toString().padStart(2, '0')}`;
+    const d = new Date(r.timestamp);
+    return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
   });
 
   lineChart.setOption({
-    xAxis: { data: timestamps },
+    xAxis: {
+      type: 'category',
+      boundaryGap: false,
+      data: timestamps
+    },
     series: [
-      { data: subset.map(r => r.ph_level) },
-      { data: subset.map(r => r.nutrient_level) }
+      {
+        name: 'pH Level',
+        type: 'line',
+        smooth: true,
+        itemStyle: { color: '#0072B2' },
+        lineStyle: { color: '#0072B2' },
+        data: subset.map(r => r.ph_level)
+      },
+      {
+        name: 'PPM (TDS)',
+        type: 'line',
+        smooth: true,
+        itemStyle: { color: '#009E73' },
+        lineStyle: { color: '#009E73' },
+        data: subset.map(r => r.nutrient_level)
+      }
     ]
   });
 }
+
 
 
 // loop
