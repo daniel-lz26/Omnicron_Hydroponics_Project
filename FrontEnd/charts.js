@@ -299,7 +299,9 @@ function updateGaugeCharts(data) {
 function updateLineChart(readings) {
   if (readings.length < 1) return;
 
-  const last24 = readings.slice(-24);
+  const cutoff = Date.now() - (24 * 60 * 60 * 1000); // last 24 hours
+  const last24 = readings.filter(r => new Date(r.timestamp).getTime() >= cutoff);
+
 
   const timestamps = last24.map(r => {
     let d = new Date(r.timestamp);
