@@ -179,16 +179,13 @@ nav button:hover {
   font-weight: 300;
 }
 
-.spline-placeholder {
-
+spline-viewer {
   width: 400px;
   height: 700px;
-  background-color: #5fc76d;
   border-radius: 10px;
   margin: 40px auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
+  background: transparent !important;
 }
 
 .about-image {
