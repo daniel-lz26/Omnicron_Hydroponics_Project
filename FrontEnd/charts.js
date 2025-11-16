@@ -275,6 +275,8 @@ function updateGaugeCharts(data) {
 
 //adding history to the line charts
 function updateLineChart(readings) {
+  console.log("Updating line chart with", subset.length, "points");
+
   if (!Array.isArray(readings) || readings.length === 0) {
     console.warn("❗ No readings found");
     return;
