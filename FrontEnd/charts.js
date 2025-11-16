@@ -71,9 +71,6 @@ async function fetchAllReadings() {
 }
 
 // setting up echarts
-const hours = Array.from({ length: 24 }, (_, i) => i + ":00");
-
-// line chart
 const lineChart = echarts.init(document.getElementById('lineChart'));
 
 const lineOption = {
@@ -84,20 +81,16 @@ const lineOption = {
   },
   tooltip: {
     trigger: 'axis',
-    formatter: function (params) {
-      let out = params[0].axisValueLabel + "<br/>";
-      params.forEach(item => {
-        out += `${item.marker}${item.seriesName}: ${item.value}<br/>`;
-      });
-      return out;
-    }
   },
   legend: {
     top: 40,
     data: ['pH Level', 'PPM (TDS)']
   },
   grid: { left: '8%', right: '8%', bottom: '10%', containLabel: true },
-  xAxis: { type: 'category', boundaryGap: false, data: hours },
+
+  // ❗ dynamic axis (empty, will be replaced every update)
+  xAxis: { type: 'category', boundaryGap: false, data: [] },
+
   yAxis: [
     {
       type: 'value',
@@ -115,28 +108,13 @@ const lineOption = {
     }
   ],
   series: [
-    {
-      name: 'pH Level',
-      type: 'line',
-      yAxisIndex: 0,
-      smooth: true,
-      itemStyle: { color: '#0072B2' },
-      lineStyle: { color: '#0072B2' },
-      data: []
-    },
-    {
-      name: 'PPM (TDS)',
-      type: 'line',
-      yAxisIndex: 1,
-      smooth: true,
-      itemStyle: { color: '#009E73' },
-      lineStyle: { color: '#009E73' },
-      data: []
-    }
+    { name: 'pH Level', type: 'line', data: [] },
+    { name: 'PPM (TDS)', type: 'line', data: [] }
   ]
 };
 
 lineChart.setOption(lineOption);
+
 
 // Gauge charts
 const phGauge = echarts.init(document.getElementById('phGaugeChart'));
