@@ -179,6 +179,23 @@
             </div>
          </div>
       </div>
+
+      <!-- Pump Controls -->
+      <div class="pump-controls-container"
+           data-aos="fade-up"
+           data-aos-duration="1000"
+           data-aos-delay="500">
+         <h3>Manual Pump Control</h3>
+         <div class="pump-buttons">
+            <button onclick="controlPump('on')" class="pump-btn pump-on-btn">
+               Pump ON
+            </button>
+            <button onclick="controlPump('off')" class="pump-btn pump-off-btn">
+               Pump OFF
+            </button>
+         </div>
+         <div id="pump-control-status" class="pump-status-text"></div>
+      </div>
    </div>
 
    <div id="analytics-section" class="page-section">
@@ -247,6 +264,7 @@
    <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
    <script src="charts.js"></script>
    <script src="alerts.js"></script>
+   <script src="pump-controls.js"></script>
    <script src="main.js"></script>
    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
    <script>
