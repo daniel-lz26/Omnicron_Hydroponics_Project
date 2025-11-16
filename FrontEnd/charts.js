@@ -11,17 +11,17 @@ let currentData = {
 
 // determines if in or out of water
 function getWaterStatus(level) {
-  if (level < 0.07) return "OUT OF WATER";
-  if (level > 0.5) return "IN WATER";
-  return "MID LEVEL";
+  if (level < 7) return "NO WATER";
+  if (level > 50) return "WATER";
+  return "LOW WATER";
 }
+
 
 // for gauge 0 = no water, 1 = water
 function waterStatusBinary(level) {
-  if (level < 7) return 0;  
-  if (level > 50) return 1;  
-  return 0;  
+  return level > 50 ? 1 : 0;
 }
+
 
 // colors for charts
 function getWaterColor(level) {
@@ -209,26 +209,15 @@ waterGauge.setOption({
       lineStyle: {
         width: 20,
         color: [
-          [0.5, '#D55E00'],   // red (no water)
-          [1, '#009E73']      // green (water detected)
+          [0.5, '#D55E00'],   // 0 = NO WATER
+          [1, '#009E73']      // 1 = WATER
         ]
       }
     },
-    axisTick: { show: false },
-    axisLabel: {
-      distance: -35,
-      fontSize: 12,
-      formatter: function(value) {
-        return value === 0 ? 'No' : 'Yes';
-      }
-    },
     detail: {
-      formatter: function(value) {
-        return value === 1 ? 'WATER' : 'NO WATER';
-      },
+      formatter: (value) => value === 1 ? "WATER" : "NO WATER",
       fontSize: 18,
-      offsetCenter: [0, '70%'],
-      color: 'auto'
+      offsetCenter: [0, '70%']
     },
     title: {
       offsetCenter: [0, '90%'],
@@ -237,6 +226,7 @@ waterGauge.setOption({
     data: [{ value: 0, name: 'Water Status' }]
   }]
 });
+
 
 //update live data to the gauge charts
 function updateGaugeCharts(data) {
@@ -277,10 +267,13 @@ function updateGaugeCharts(data) {
   });
 
   waterGauge.setOption({
-    series: [{
-      data: [{ value: waterStatusBinary(currentData.waterLevel), name: 'Water Status' }]
-    }]
-  });
+  series: [{
+    data: [
+      { value: waterStatusBinary(currentData.waterLevel), name: "Water Status" }
+    ]
+  }]
+});
+
 }
 
 //adding history to the line charts
