@@ -17,7 +17,6 @@
             <button onclick="scrollToSection('manual')">User Manual</button>
             <button onclick="scrollToSection('analytics')">Analytics</button>
             <button onclick="scrollToSection('about')">About</button>
-            <button onclick="window.location.href='settings.html'">Settings</button>
          </nav>
       </header>
    </div>
@@ -32,18 +31,141 @@
          <p>Spline Placeholder</p>
       </div>
    </div>
+<!-- USER MANUAL -->
+<div id="manual-section" class="page-section">
+   <h2 data-aos="fade-right" data-aos-duration="1000">User Manual.</h2>
 
-   <div id="manual-section" class="page-section">
-      <h2 data-aos="fade-right" data-aos-duration="1000">user manual.</h2>
-      <p data-aos="zoom-in" 
-         data-aos-duration="800" 
-         data-aos-delay="400">
-         Here, you'll find all the information regarding our website.
+   <p style="font-size:20px; max-width:900px; margin-bottom:40px;" 
+      data-aos="fade-up" data-aos-duration="800">
+      Here you'll find everything you need to understand and operate the Growmicron Hydroponic System.
+   </p>
+
+   <!-- Hydroponic Explanation -->
+   <section data-aos="fade-up" data-aos-duration="800" style="max-width:900px; margin-bottom:50px;">
+      <h3 style="font-size:26px; margin-bottom:10px;">What is "Hydroponics?"</h3>
+      <p style="font-size:18px;">
+         Hydroponics is a method of growing plants without soil. Instead, plants receive water,
+         nutrients, and oxygen directly to their roots. The Growmicron system uses a mist-based
+         aeroponic design to maximize growth efficiency and reduce water waste.
       </p>
-   </div>
+   </section>
+
+   <!-- HOW IT WORKS -->
+   <section data-aos="fade-up" data-aos-duration="800" style="max-width:900px; margin-bottom:50px;">
+      <h3 style="font-size:26px; margin-bottom:10px;">How our System Works</h3>
+      <p style="font-size:18px;">
+         Water is pumped from the reservoir through a pressure mister system that coats plant roots
+         with a fine, nutrient-rich mist. Sensors monitor pH, nutrient concentration (TDS), and water
+         level. The Raspberry Pi processes all sensor data and updates the dashboard in real time.
+      </p>
+   </section>
+
+   <!-- specs -->
+   <section data-aos="fade-up" data-aos-duration="800" style="max-width:900px; margin-bottom:50px;">
+      <h3 style="font-size:26px; margin-bottom:10px;">System Specifications</h3>
+      <ul style="font-size:18px; margin-left:20px; line-height:1.6;">
+         <li>Model: Growmicron Aeroponic System</li>
+         <li>Dimensions: 59 in tall, 23.9 in long</li>
+         <li>Reservoir Capacity: 13.25 L</li>
+         <li>Plant Capacity: 6 plants</li>
+         <li>Pump Voltage: 12V • Flow Rate: 1.2 GPM</li>
+         <li>Raspberry Pi Input: 5V</li>
+         <li>Sensors Input: 3V</li>
+         <li>80 full-spectrum LED lights</li>
+         <li>Frame Material: 3D-printed PLA</li>
+      </ul>
+   </section>
+
+   <!-- Hardware Parts -->
+   <section data-aos="fade-up" data-aos-duration="800" style="max-width:900px; margin-bottom:50px;">
+      <h3 style="font-size:26px; margin-bottom:10px;">Hardware Components</h3>
+      <ul style="font-size:18px; margin-left:20px; line-height:1.6;">
+         <li>CQRobot Water Level Sensor</li>
+         <li>CQRobot TDS Sensor</li>
+         <li>pH Sensor</li>
+         <li>Raspberry Pi 4B + ADC Converter</li>
+         <li>Relay Module (2-Channel)</li>
+         <li>High-pressure misters + PVC system</li>
+         <li>LED Grow Lighting</li>
+         <li>Ventilation Fans</li>
+         <li>5-gallon reservoir bucket</li>
+      </ul>
+   </section>
+
+   <!-- how to set up -->
+   <section data-aos="fade-up" data-aos-duration="800" style="max-width:900px; margin-bottom:50px;">
+      <h3 style="font-size:26px; margin-bottom:10px;">How to Use the System</h3>
+      <ol style="font-size:18px; margin-left:20px; line-height:1.6;">
+         <li>Fill the reservoir with water and nutrient solution.</li>
+         <li>Place plants in the provided plant cups.</li>
+         <li>Turn on the Raspberry Pi and the pump.</li>
+         <li>Monitor pH, TDS, and water level on the dashboard.</li>
+         <li>Allow the automated misting cycle to run normally.</li>
+      </ol>
+   </section>
+
+   <!-- how sensors work -->
+   <section data-aos="fade-up" data-aos-duration="800" style="max-width:900px; margin-bottom:50px;">
+      <h3 style="font-size:26px; margin-bottom:10px;">How Sensors Process Data</h3>
+      <p style="font-size:18px;">
+         The Raspberry Pi uses an ADC to convert raw analog signals into readable data:
+      </p>
+      <ul style="font-size:18px; margin-left:20px; line-height:1.6;">
+         <li><b>pH Sensor:</b> Converts voltage to pH using calibration curves. (we want to note that our ph sensor is not working we thinking due to interference)</li>
+         <li><b>Water Level Sensor:</b> Detects reservoir height (full, normal, low).</li>
+         <li><b>TDS Sensor:</b> Converts voltage to nutrient concentration (ppm).</li>
+      </ul>
+      <p style="font-size:18px;">
+         All values update on the dashboard in real time.
+      </p>
+   </section>
+
+   <!-- how to maintain -->
+   <section data-aos="fade-up" data-aos-duration="800" style="max-width:900px; margin-bottom:50px;">
+      <h3 style="font-size:26px; margin-bottom:10px;">Maintenance Schedule</h3>
+      <ul style="font-size:18px; margin-left:20px; line-height:1.6;">
+         <li>Refill water every 10–12 days (max 16–17).</li>
+         <li>Replace full reservoir monthly.</li>
+         <li>Clean all sensors every 2–3 weeks.</li>
+         <li>Check misters weekly for clogs.</li>
+         <li>Inspect pump and wiring monthly.</li>
+      </ul>
+   </section>
+
+   <!-- how not to blow up the system -->
+   <section data-aos="fade-up" data-aos-duration="800" style="max-width:900px; margin-bottom:50px;">
+      <h3 style="font-size:26px; margin-bottom:10px;">Safety Warnings</h3>
+      <ul style="font-size:18px; margin-left:20px; line-height:1.6;">
+         <li>Keep electronics away from water.</li>
+         <li>Disconnect power before servicing.</li>
+         <li>Do not run with damaged wiring.</li>
+         <li>Do not overfill the reservoir.</li>
+         <li>Avoid touching sensor probes with bare hands.</li>
+      </ul>
+   </section>
+
+   <!-- website -->
+   <section data-aos="fade-up" data-aos-duration="800" style="max-width:900px; margin-bottom:50px;">
+      <h3 style="font-size:26px; margin-bottom:10px;">Website Features</h3>
+      <p style="font-size:18px;">
+         The Growmicron website displays:
+      </p>
+      <ul style="font-size:18px; margin-left:20px; line-height:1.6;">
+         <li>Real-time pH readings</li>
+         <li>TDS and water nutrient data</li>
+         <li>Water level status</li>
+         <li>System alerts and warnings</li>
+      </ul>
+      <p style="font-size:18px;">
+         Users can monitor their hydroponic system in real-time through an intuitive interface.
+      </p>
+   </section>
+
+</div>
+
 
    <div id="dashboard-section" class="page-section">
-      <h2 data-aos="fade-right" data-aos-duration="1000">dashboard.</h2>
+      <h2 data-aos="fade-right" data-aos-duration="1000">Dashboard.</h2>
 
       <!-- System Alerts -->
       <div class="alerts-container"
@@ -60,7 +182,7 @@
    </div>
 
    <div id="analytics-section" class="page-section">
-      <h2 data-aos="fade-right" data-aos-duration="1000">analytics.</h2>
+      <h2 data-aos="fade-right" data-aos-duration="1000">Analytics.</h2>
       <div class="gauges-container" 
            data-aos="fade-up" 
            data-aos-duration="1000" 
@@ -93,7 +215,7 @@
    </div>
 
    <div id="about-section" class="page-section">
-      <h2 data-aos="fade-right" data-aos-duration="1000">about us.</h2>
+      <h2 data-aos="fade-right" data-aos-duration="1000">About Us.</h2>
       <button onclick="window.open('https://github.com/daniel-lz26/Omnicron_Hydroponics_Project')" class ="github-button"
               data-aos="zoom-in" 
               data-aos-duration="800" 
@@ -113,7 +235,7 @@
          the system — from researching nutrient mixes to displaying it's live data.
          Together, we're proving that with the right tools and teamwork, even a classroom can become a green, thriving garden.
       </p>
-      <img src="Images/omicron.jpg" 
+      <img src="Images/omicron.JPG" 
         alt="Omicron Hydroponics Team" 
         class="about-image"
         data-aos="fade-left" 
