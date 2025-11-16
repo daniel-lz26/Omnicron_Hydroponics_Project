@@ -1,50 +1,44 @@
-// ---------------------------------------
-// API CONFIG
-// ---------------------------------------
+//Hai this is Bryan
 const API_BASE_URL = 'https://omnicronhydroponicsproject-production.up.railway.app';
 const UPDATE_INTERVAL = 30000; // 30 sec refresh
 
-// current live data (no defaults - waits for API)
+// current live data 
 let currentData = {
   ph: null,
   tds: null,
   waterLevel: null
 };
 
-// ---------------------------------------
-// WATER STATUS HELPERS
-// ---------------------------------------
+// determines if in or out of water
 function getWaterStatus(level) {
   if (level < 0.07) return "OUT OF WATER";
   if (level > 0.5) return "IN WATER";
   return "MID LEVEL";
 }
 
-// gauge needs binary: 0 = no water, 1 = water
-// water detected if level > 50%, no water if level < 7%
+// for gauge 0 = no water, 1 = water
 function waterStatusBinary(level) {
-  if (level < 7) return 0;  // No water
-  if (level > 50) return 1;  // Water detected
-  return 0;  // Default to no water for mid-range
+  if (level < 7) return 0;  
+  if (level > 50) return 1;  
+  return 0;  
 }
 
-// color for line chart + gauge
+// colors for charts
 function getWaterColor(level) {
-  if (level < 7) return '#D55E00';   // red
-  if (level > 50) return '#009E73';  // green
-  return '#E69F00';                  // orange
+  if (level < 7) return '#D55E00';   
+  if (level > 50) return '#009E73';  
+  return '#E69F00';                  
 }
 
-// ---------------------------------------
-// FETCH FUNCTIONS
-// ---------------------------------------
+// fetch functions
+
 async function fetchLatestReading() {
   try {
     const res = await fetch(`${API_BASE_URL}/readings/latest`);
     if (!res.ok) throw new Error(res.status);
     return await res.json();
   } catch (e) {
-    console.error("❌ Latest reading error:", e);
+    console.error(" Latest reading error:", e);
     return null;
   }
 }
@@ -55,19 +49,15 @@ async function fetchAllReadings() {
     if (!res.ok) throw new Error(res.status);
     return await res.json();
   } catch (e) {
-    console.error("❌ Error fetching all readings:", e);
+    console.error("Error fetching all readings:", e);
     return [];
   }
 }
 
-// ---------------------------------------
-// ECHARTS SETUP
-// ---------------------------------------
+// setting up echarts
 const hours = Array.from({ length: 24 }, (_, i) => i + ":00");
 
-// -------------------------
-// INITIALIZE LINE CHART
-// -------------------------
+// line chart
 const lineChart = echarts.init(document.getElementById('lineChart'));
 
 const lineOption = {
@@ -104,7 +94,7 @@ const lineOption = {
       name: 'pH Level',
       type: 'line',
       smooth: true,
-      itemStyle: { color: '#0072B2' }, // colorblind-friendly blue
+      itemStyle: { color: '#0072B2' }, // colorblind-friendly blue :)
       lineStyle: { color: '#0072B2' },
       data: []
     }
@@ -113,9 +103,7 @@ const lineOption = {
 
 lineChart.setOption(lineOption);
 
-// ---------------------------------------
-// GAUGES
-// ---------------------------------------
+// Gauge charts
 const phGauge = echarts.init(document.getElementById('phGaugeChart'));
 const tdsGauge = echarts.init(document.getElementById('tdsGaugeChart'));
 const waterGauge = echarts.init(document.getElementById('waterLevelGaugeChart'));
@@ -132,11 +120,11 @@ phGauge.setOption({
       lineStyle: {
         width: 20,
         color: [
-          [0.35, '#D55E00'],  // red (acidic)
-          [0.5, '#E69F00'],   // orange (slightly acidic)
-          [0.65, '#009E73'],  // green (neutral/optimal)
-          [0.8, '#E69F00'],   // orange (slightly alkaline)
-          [1, '#D55E00']      // red (alkaline)
+          [0.35, '#D55E00'],  //as the meter moves to the right, the more basic the water is
+          [0.5, '#E69F00'],   
+          [0.65, '#009E73'],  
+          [0.8, '#E69F00'],   
+          [1, '#D55E00']      
         ]
       }
     },
@@ -167,11 +155,11 @@ tdsGauge.setOption({
       lineStyle: {
         width: 20,
         color: [
-          [0.25, '#D55E00'],  // red (very low)
-          [0.4, '#E69F00'],   // orange (low)
-          [0.7, '#009E73'],   // green (optimal 500-1400)
-          [0.85, '#E69F00'],  // orange (high)
-          [1, '#D55E00']      // red (very high)
+          [0.25, '#D55E00'],  // tds range, as it moves to the right, the more ppm there is
+          [0.4, '#E69F00'],   
+          [0.7, '#009E73'],   
+          [0.85, '#E69F00'],  
+          [1, '#D55E00']      
         ]
       }
     },
@@ -231,9 +219,7 @@ waterGauge.setOption({
   }]
 });
 
-// ---------------------------------------
-// UPDATE GAUGE WITH LIVE DATA
-// ---------------------------------------
+//update live data to the gauge charts
 function updateGaugeCharts(data) {
   if (!data || data.ph_level === undefined || data.nutrient_level === undefined || data.water_level === undefined) {
     console.warn("⚠️ Invalid or incomplete data received:", data);
@@ -278,9 +264,7 @@ function updateGaugeCharts(data) {
   });
 }
 
-// ---------------------------------------
-// UPDATE LINE CHART WITH HISTORY
-// ---------------------------------------
+//adding history to the line charts
 function updateLineChart(readings) {
   if (readings.length < 1) return;
 
@@ -299,9 +283,7 @@ function updateLineChart(readings) {
   });
 }
 
-// ---------------------------------------
-// INITIALIZATION + LIVE LOOP
-// ---------------------------------------
+// loop
 async function initializeCharts() {
   const latest = await fetchLatestReading();
   if (latest) updateGaugeCharts(latest);
