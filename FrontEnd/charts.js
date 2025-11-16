@@ -303,7 +303,7 @@ function updateLineChart(readings) {
 
   const timestamps = last24.map(r => {
     let d = new Date(r.timestamp);
-    return `${d.getHours()}:${d.getMinutes().toString().padStart(2, '0')}`;
+    return `${d.getHours()}:${d.getMinutes().toString().padStart(2, '0')}:${d.getSeconds().toString().padStart(2, '0')}`;
   });
 
   lineChart.setOption({
