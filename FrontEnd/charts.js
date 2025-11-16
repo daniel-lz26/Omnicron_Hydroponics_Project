@@ -324,14 +324,16 @@ async function initializeCharts() {
   if (latest) updateGaugeCharts(latest);
 
   const history = await fetchAllReadings();
-  if (history) updateLineChart(history);
+  if (history && history.length > 0) updateLineChart(history);
+
 
   setInterval(async () => {
     const latest = await fetchLatestReading();
     if (latest) updateGaugeCharts(latest);
 
     const history = await fetchAllReadings();
-    if (history) updateLineChart(history);
+    if (history && history.length > 0) updateLineChart(history);
+
   }, UPDATE_INTERVAL);
 }
 
