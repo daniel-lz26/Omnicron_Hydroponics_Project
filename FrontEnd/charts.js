@@ -275,42 +275,60 @@ function updateGaugeCharts(data) {
 
 //adding history to the line charts
 function updateLineChart(readings) {
-  if (!readings || readings.length === 0) return;
+  if (!Array.isArray(readings) || readings.length === 0) {
+    console.warn("❗ No readings found");
+    return;
+  }
 
-  const limit = 150; // or 100 — your choice
+  const limit = 200; 
   const subset = readings.slice(-limit);
 
   const timestamps = subset.map(r => {
     const d = new Date(r.timestamp);
-    return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    return d.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit"
+    });
   });
 
+  const phData = subset.map(r => r.ph_level);
+  const ppmData = subset.map(r => r.nutrient_level);
+
+  console.log("📈 Updating chart:", {
+    latestPH: phData[phData.length - 1],
+    latestPPM: ppmData[ppmData.length - 1]
+  });
+
+  // FULL overwrite, fixes freezing
   lineChart.setOption({
     xAxis: {
-      type: 'category',
+      type: "category",
       boundaryGap: false,
       data: timestamps
     },
     series: [
       {
-        name: 'pH Level',
-        type: 'line',
+        name: "pH Level",
+        type: "line",
         smooth: true,
-        itemStyle: { color: '#0072B2' },
-        lineStyle: { color: '#0072B2' },
-        data: subset.map(r => r.ph_level)
+        itemStyle: { color: "#0072B2" },
+        lineStyle: { color: "#0072B2" },
+        data: phData
       },
       {
-        name: 'PPM (TDS)',
-        type: 'line',
+        name: "PPM (TDS)",
+        type: "line",
         smooth: true,
-        itemStyle: { color: '#009E73' },
-        lineStyle: { color: '#009E73' },
-        data: subset.map(r => r.nutrient_level)
+        itemStyle: { color: "#009E73" },
+        lineStyle: { color: "#009E73" },
+        data: ppmData
       }
     ]
-  });
+  }, true);   // <--- FORCE REPLACE
 }
+
+
 
 
 
