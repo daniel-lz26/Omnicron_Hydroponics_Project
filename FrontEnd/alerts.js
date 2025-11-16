@@ -1,23 +1,19 @@
-// ---------------------------------------
-// SYSTEM ALERTS MONITORING
-// ---------------------------------------
-// Note: API_BASE_URL is defined in charts.js (loaded first)
 
 // Alert thresholds
 const THRESHOLDS = {
   water: {
-    critical: 7,      // Below 7% = OUT OF WATER
-    warning: 20       // Below 20% = LOW WATER WARNING
+    critical: 7,      // Below 7% = no water
+    warning: 20       // Below 20% = low water
   },
   ppm: {
-    min: 500,         // Below 500 = TOO LOW
-    max: 1400,        // Above 1400 = TOO HIGH
-    criticalLow: 300, // Below 300 = CRITICALLY LOW
-    criticalHigh: 1800 // Above 1800 = CRITICALLY HIGH
+    min: 500,         // Below 500 = too low
+    max: 1400,        // Above 1400 = too high
+    criticalLow: 300, // Below 300 = very low
+    criticalHigh: 1800 // Above 1800 = very high
   },
   ph: {
-    min: 5.5,         // Below 5.5 = TOO ACIDIC
-    max: 7.5,         // Above 7.5 = TOO ALKALINE
+    min: 5.5,         // Below 5.5 = too acidic
+    max: 7.5,         // Above 7.5 = too basic
     criticalLow: 5.0,
     criticalHigh: 8.0
   }
@@ -37,7 +33,7 @@ function checkAlerts(data) {
     ph_level: data.ph_level
   });
 
-  // Check Water Level - EXPLICIT CHECK
+  // Check Water Level
   const waterLevel = parseFloat(data.water_level);
 
   if (waterLevel < THRESHOLDS.water.critical) {
@@ -101,7 +97,7 @@ function checkAlerts(data) {
     });
   }
 
-  // Check pH (optional - can be enabled)
+  // Check pH (doesnt really update because it does not work)
   if (data.ph_level < THRESHOLDS.ph.criticalLow) {
     newAlerts.push({
       id: 'ph-critical-low',
@@ -156,7 +152,7 @@ function updateAlertsDisplay(alerts) {
   alertsList.innerHTML = '';
 
   if (alerts.length === 0) {
-    // Show "all systems normal" message
+    // default message when there are no alerts
     alertsList.innerHTML = `
       <div class="alert-placeholder">
         All systems normal
@@ -183,7 +179,7 @@ function updateAlertsDisplay(alerts) {
       // Track active alerts
       if (!activeAlerts.has(alert.id)) {
         activeAlerts.add(alert.id);
-        console.log(`🚨 NEW ALERT: ${alert.title} - ${alert.message}`);
+        console.log(`NEW ALERT: ${alert.title} - ${alert.message}`);
       }
     });
   }
@@ -231,7 +227,7 @@ async function monitorSystemAlerts() {
     updateAlertsDisplay(alerts);
 
     // Log to console for debugging
-    console.log(`📊 Alert Check Complete:`, {
+    console.log(`Alert Check Complete:`, {
       totalAlerts: alerts.length,
       water_level: data.water_level + '%',
       ppm: data.nutrient_level,
@@ -240,17 +236,17 @@ async function monitorSystemAlerts() {
     });
 
     if (alerts.length > 0) {
-      console.log('⚠️ ACTIVE ALERTS:', alerts);
+      console.log(' ACTIVE ALERTS:', alerts);
     }
 
   } catch (error) {
-    console.error('❌ Error checking alerts:', error);
+    console.error('Error checking alerts:', error);
   }
 }
 
 // Initialize alerts system
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('🔔 Alerts system initialized');
+  console.log(' Alerts system initialized');
 
   // Initial check
   monitorSystemAlerts();
