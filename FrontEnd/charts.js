@@ -1,5 +1,5 @@
 //Hai this is Bryan
-const API_BASE_URL = 'https://omnicronhydroponicsproject-production.up.railway.app';
+const API_BASE_URL = 'https://omnicronhydroponicsproject-production.up.railway.app/';
 const UPDATE_INTERVAL = 30000; // 30 sec refresh
 
 // current live data 
