@@ -297,13 +297,13 @@ function updateGaugeCharts(data) {
 
 //adding history to the line charts
 function updateLineChart(readings) {
-  if (readings.length < 1) return;
+  if (!readings || readings.length === 0) return;
 
-  const cutoff = Date.now() - (24 * 60 * 60 * 1000); // last 24 hours
-  const last24 = readings.filter(r => new Date(r.timestamp).getTime() >= cutoff);
+  // Use last 100 readings (smooth + real-time)
+  const limit = 100;
+  const subset = readings.slice(-limit);
 
-
-  const timestamps = last24.map(r => {
+  const timestamps = subset.map(r => {
     let d = new Date(r.timestamp);
     return `${d.getHours()}:${d.getMinutes().toString().padStart(2, '0')}:${d.getSeconds().toString().padStart(2, '0')}`;
   });
@@ -311,11 +311,12 @@ function updateLineChart(readings) {
   lineChart.setOption({
     xAxis: { data: timestamps },
     series: [
-      { data: last24.map(r => r.ph_level) },
-      { data: last24.map(r => r.nutrient_level) }
+      { data: subset.map(r => r.ph_level) },
+      { data: subset.map(r => r.nutrient_level) }
     ]
   });
 }
+
 
 // loop
 async function initializeCharts() {
