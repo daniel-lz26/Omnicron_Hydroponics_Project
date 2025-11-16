@@ -255,17 +255,17 @@ function updateGaugeCharts(data) {
   currentData.ph = data.ph_level;
   currentData.tds = data.nutrient_level;
   // Water Level — Backend sends STRING ("IN WATER", "MID LEVEL", "OUT OF WATER")
-let wl = data.water_level;
+  let wl = data.water_level;
 
 // Convert backend water level into numeric %
-if (typeof wl === "string") {
-  wl = wl.toUpperCase();
-  if (wl === "IN WATER") currentData.waterLevel = 100;
-  else if (wl === "OUT OF WATER") currentData.waterLevel = 0;
-  else currentData.waterLevel = 50;  // MID LEVEL
-} else {
-  currentData.waterLevel = wl;
-}
+  if (typeof wl === "string") {
+    wl = wl.toUpperCase();
+    if (wl === "IN WATER") currentData.waterLevel = 100;
+    else if (wl === "OUT OF WATER") currentData.waterLevel = 0;
+    else currentData.waterLevel = 50;  // MID LEVEL
+  } else {
+    currentData.waterLevel = wl;
+  }
 
 
   // Debug: Log what we're sending to each gauge
