@@ -22,9 +22,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# =============================
-# PUMP STATE STORAGE (In-Memory)
-# =============================
+
 pump_state = {
     "status": "off",      # "on" or "off"
     "last_updated": None,
@@ -32,13 +30,9 @@ pump_state = {
 }
 
 
-# =============================
-# CREATE NEW READING (POST)
-# =============================
 @app.post("/readings/", response_model=schemas.ProbeReadingResponse)
 def create_reading(reading: schemas.ProbeReadingCreate, db: Session = Depends(get_db)):
 
-    # Convert water level to float
     try:
         reading.water_level = float(reading.water_level)
     except:
@@ -50,17 +44,13 @@ def create_reading(reading: schemas.ProbeReadingCreate, db: Session = Depends(ge
 
 
 
-# =============================
-# GET ALL READINGS
-# =============================
+    # all readings
 @app.get("/readings/", response_model=list[schemas.ProbeReadingResponse])
 def get_all_readings(db: Session = Depends(get_db)):
     return crud.get_all_readings(db)
 
 
-# =============================
-# GET LATEST READING
-# =============================
+# get last readings
 @app.get("/readings/latest", response_model=schemas.ProbeReadingResponse)
 def get_latest_reading(db: Session = Depends(get_db)):
     latest = crud.get_latest_reading(db)
@@ -69,17 +59,13 @@ def get_latest_reading(db: Session = Depends(get_db)):
     return latest
 
 
-# =============================
-# GET MIN/MAX STATS
-# =============================
+
 @app.get("/stats/")
 def get_stats(db: Session = Depends(get_db)):
     return crud.get_min_max_stats(db)
 
 
-# =============================
-# MANUAL PUMP CONTROL ENDPOINTS
-# =============================
+# manual pump (not used anymore)
 @app.post("/pump/on")
 def pump_on():
     """Turn pump ON - Updates state for Pi to read"""
@@ -89,7 +75,7 @@ def pump_on():
     pump_state["last_updated"] = datetime.now().isoformat()
     pump_state["requested_by"] = "web_ui"
 
-    print("🔵 PUMP ON - Manual control activated")
+    print("🔵PUMP ON - Manual control activated")
     print(f"   State updated: {pump_state}")
 
     return {
@@ -110,7 +96,7 @@ def pump_off():
     pump_state["last_updated"] = datetime.now().isoformat()
     pump_state["requested_by"] = "web_ui"
 
-    print("🔴 PUMP OFF - Manual control deactivated")
+    print("PUMP OFF - Manual control deactivated")
     print(f"   State updated: {pump_state}")
 
     return {

@@ -8,7 +8,7 @@ from app.models import ProbeReading
 from app.schemas import ProbeReadingCreate
 
 
-# CREATE
+# create
 def create_probe_reading(db: Session, reading: ProbeReadingCreate) -> ProbeReading:
     """Insert a new probe reading row."""
     new_reading = ProbeReading(**reading.model_dump())
@@ -18,7 +18,7 @@ def create_probe_reading(db: Session, reading: ProbeReadingCreate) -> ProbeReadi
     return new_reading
 
 
-# READ
+# read
 def get_all_readings(db: Session) -> List[ProbeReading]:
     return db.query(ProbeReading).all()
 
@@ -110,7 +110,7 @@ def update_reading(
     return reading
 
 
-# DELETE
+# delete
 def delete_reading(db: Session, reading_id: int) -> bool:
     reading = db.query(ProbeReading).filter(ProbeReading.id == reading_id).first()
     if not reading:
@@ -130,7 +130,7 @@ def delete_old_readings(db: Session, days_to_keep: int = 30) -> int:
     return deleted_count
 
 
-# STATS
+# stats
 def get_average_ph(db: Session, hours: int = 24) -> Optional[float]:
     cutoff_time = datetime.now() - timedelta(hours=hours)
     result = (
@@ -180,7 +180,7 @@ def get_min_max_stats(db: Session, hours: int = 24) -> Optional[dict]:
         .first()
     )
 
-    # When there are no rows, or any value is None, return None gracefully
+    # When there are no rows, or any value is None, return None
     if not stats or any(
         v is None
         for v in (
