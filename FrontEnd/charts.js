@@ -14,26 +14,25 @@ let currentData = {
 // ---------------------------------------
 // WATER STATUS HELPERS
 // ---------------------------------------
-// Note: water_level comes as percentage 0-100 (e.g., 50 = 50%)
 function getWaterStatus(level) {
-  if (level < 7) return "OUT OF WATER";   // < 7%
-  if (level > 50) return "IN WATER";      // > 50%
+  if (level < 0.07) return "OUT OF WATER";
+  if (level > 0.5) return "IN WATER";
   return "MID LEVEL";
 }
 
 // gauge needs binary: 0 = no water, 1 = water
 // water detected if level > 50%, no water if level < 7%
 function waterStatusBinary(level) {
-  if (level < 7) return 0;   // No water (< 7%)
-  if (level > 50) return 1;  // Water detected (> 50%)
-  return 0;  // Default to no water for mid-range (7-50%)
+  if (level < 7) return 0;  // No water
+  if (level > 50) return 1;  // Water detected
+  return 0;  // Default to no water for mid-range
 }
 
 // color for line chart + gauge
 function getWaterColor(level) {
-  if (level < 7) return '#D55E00';    // red (< 7%)
-  if (level > 50) return '#009E73';   // green (> 50%)
-  return '#E69F00';                   // orange (mid-level 7-50%)
+  if (level < 7) return '#D55E00';   // red
+  if (level > 50) return '#009E73';  // green
+  return '#E69F00';                  // orange
 }
 
 // ---------------------------------------
@@ -73,7 +72,7 @@ const lineChart = echarts.init(document.getElementById('lineChart'));
 
 const lineOption = {
   title: {
-    text: '24-Hour pH & PPM History',
+    text: '24-Hour pH Level History',
     left: 'center',
     top: 10
   },
@@ -82,60 +81,31 @@ const lineOption = {
     formatter: function (params) {
       let out = params[0].axisValueLabel + "<br/>";
       params.forEach(item => {
-        if (item.seriesName === 'PPM (TDS)') {
-          out += `${item.marker}${item.seriesName}: ${item.value} ppm<br/>`;
-        } else {
-          out += `${item.marker}${item.seriesName}: ${item.value}<br/>`;
-        }
+        out += `${item.marker}${item.seriesName}: ${item.value}<br/>`;
       });
       return out;
     }
   },
   legend: {
     top: 40,
-    data: ['pH Level', 'PPM (TDS)']
+    data: ['pH Level']
   },
-  grid: { left: '8%', right: '12%', bottom: '10%', containLabel: true },
+  grid: { left: '8%', right: '8%', bottom: '10%', containLabel: true },
   xAxis: { type: 'category', boundaryGap: false, data: hours },
-  yAxis: [
-    {
-      type: 'value',
-      name: 'pH Level',
-      min: 0,
-      max: 14,
-      position: 'left',
-      axisLabel: {
-        formatter: '{value}'
-      }
-    },
-    {
-      type: 'value',
-      name: 'PPM (TDS)',
-      min: 0,
-      max: 2000,
-      position: 'right',
-      axisLabel: {
-        formatter: '{value} ppm'
-      }
-    }
-  ],
+  yAxis: {
+    type: 'value',
+    name: 'pH Level',
+    min: 0,
+    max: 14,
+    position: 'left'
+  },
   series: [
     {
       name: 'pH Level',
       type: 'line',
       smooth: true,
-      yAxisIndex: 0,
       itemStyle: { color: '#0072B2' }, // colorblind-friendly blue
-      lineStyle: { color: '#0072B2', width: 2 },
-      data: []
-    },
-    {
-      name: 'PPM (TDS)',
-      type: 'line',
-      smooth: true,
-      yAxisIndex: 1,
-      itemStyle: { color: '#009E73' }, // colorblind-friendly green
-      lineStyle: { color: '#009E73', width: 2 },
+      lineStyle: { color: '#0072B2' },
       data: []
     }
   ]
@@ -324,8 +294,7 @@ function updateLineChart(readings) {
   lineChart.setOption({
     xAxis: { data: timestamps },
     series: [
-      { data: last24.map(r => r.ph_level) },
-      { data: last24.map(r => r.nutrient_level) }
+      { data: last24.map(r => r.ph_level) }
     ]
   });
 }
