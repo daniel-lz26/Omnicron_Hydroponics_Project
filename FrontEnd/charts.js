@@ -340,6 +340,7 @@ function updateLineChart(readings) {
 }
 
 
+
 // loop
 async function initializeCharts() {
   const latest = await fetchLatestReading();
