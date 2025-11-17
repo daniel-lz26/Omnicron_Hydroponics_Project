@@ -328,3 +328,5 @@ window.addEventListener('resize', () => {
   tdsGauge.resize();
   waterGauge.resize();
 });
+// this old code works better than the newer code
+// we want to add last updated at the bottom of the line chart to show if its refreshing correctly
