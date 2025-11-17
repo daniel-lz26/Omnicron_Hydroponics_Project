@@ -285,23 +285,60 @@ function updateGaugeCharts(data) {
 
 //adding history to the line charts
 function updateLineChart(readings) {
-  if (readings.length < 1) return;
+  if (!Array.isArray(readings) || readings.length === 0) {
+    console.warn("❗ No readings found");
+    return;
+  }
 
-  const last24 = readings.slice(-24);
+  const limit = 200;
+  const subset = readings.slice(-limit);  // subset is now declared BEFORE being used
 
-  const timestamps = last24.map(r => {
-    let d = new Date(r.timestamp);
-    return `${d.getHours()}:${d.getMinutes().toString().padStart(2, '0')}`;
+  console.log(`Updating line chart with ${subset.length} points`);
+
+  const timestamps = subset.map(r => {
+    const d = new Date(r.timestamp);
+    return d.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit"
+    });
+  });
+
+  const phData = subset.map(r => r.ph_level);
+  const ppmData = subset.map(r => r.nutrient_level);
+
+  console.log("📈 Updating chart:", {
+    latestPH: phData[phData.length - 1],
+    latestPPM: ppmData[ppmData.length - 1]
   });
 
   lineChart.setOption({
-    xAxis: { data: timestamps },
+    xAxis: {
+      type: "category",
+      boundaryGap: false,
+      data: timestamps
+    },
     series: [
-      { data: last24.map(r => r.ph_level) },
-      { data: last24.map(r => r.nutrient_level) }
+      {
+        name: "pH Level",
+        type: "line",
+        smooth: true,
+        itemStyle: { color: "#0072B2" },
+        lineStyle: { color: "#0072B2" },
+        data: phData
+      },
+      {
+        name: "PPM (TDS)",
+        type: "line",
+        smooth: true,
+        itemStyle: { color: "#009E73" },
+        lineStyle: { color: "#009E73" },
+        data: ppmData
+      }
     ]
-  });
+  }, true);
 }
+
 
 // loop
 async function initializeCharts() {
