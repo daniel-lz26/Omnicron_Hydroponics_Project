@@ -237,6 +237,19 @@ waterGauge.setOption({
     data: [{ value: 0, name: 'Water Status' }]
   }]
 });
+function updateLastUpdated(timestamp) {
+  const el = document.getElementById("lastUpdated");
+  if (!el || !timestamp) return;
+
+  const date = new Date(timestamp);
+  const timeStr = date.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit"
+  });
+
+  el.textContent = `Last updated: ${timeStr}`;
+}
 
 //update live data to the gauge charts
 function updateGaugeCharts(data) {
@@ -306,14 +319,21 @@ function updateLineChart(readings) {
 // loop
 async function initializeCharts() {
   const latest = await fetchLatestReading();
-  if (latest) updateGaugeCharts(latest);
+  if (latest) {
+  updateGaugeCharts(latest);
+  updateLastUpdated(latest.timestamp);
+  }
 
   const history = await fetchAllReadings();
   if (history) updateLineChart(history);
 
   setInterval(async () => {
     const latest = await fetchLatestReading();
-    if (latest) updateGaugeCharts(latest);
+    if (latest) {
+      updateGaugeCharts(latest);
+      updateLastUpdated(latest.timestamp);
+    }
+
 
     const history = await fetchAllReadings();
     if (history) updateLineChart(history);
