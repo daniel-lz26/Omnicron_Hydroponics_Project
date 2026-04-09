@@ -15,11 +15,11 @@ body {
     background-color: white;
     min-height: 100vh;
     line-height: 1.5;
+    overflow-x: hidden;
 }
 
-html, body {
+html {
   overscroll-behavior: none;
-  overflow-x: hidden;
   max-width: 100%;
 }
 
