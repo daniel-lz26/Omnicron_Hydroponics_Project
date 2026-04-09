@@ -23,7 +23,7 @@ function scrollToSection(sectionId) {
         const typingElement = document.getElementById('typing-text');
         if (typingElement) {
             setTimeout(() => {
-                typeText(typingElement, "Grow with us. 🌱", 75);
+                typeText(typingElement, "Grow with us.", 75);
             }, 500);
         }
     }
