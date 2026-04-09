@@ -49,7 +49,7 @@ header {
 
 header h1 {
     margin: 0;
-    font-size: 30px;
+    font-size: 1.875rem;
     font-weight: 300;
 }
 
@@ -67,7 +67,7 @@ nav {
 
 nav button {
   font-family: 'DM Sans', sans-serif;
-  font-size: 15px;
+  font-size: 0.9375rem;
   background: none;
   border: none;
   color: black;
@@ -89,27 +89,27 @@ nav button:hover {
 
 #manual-section {
   text-align: left;
-  font-size: 30px;
+  font-size: 1.875rem;
 }
 
 #analytics-section {
   text-align: left;
-  font-size: 30px;
+  font-size: 1.875rem;
 }
 
 #about-section {
   text-align: left;
-  font-size: 30px;
+  font-size: 1.875rem;
 }
 
 #about-section p {
-  font-size: 20px;
+  font-size: 1.25rem;
   padding-top: 40px;
 }
 
 #dashboard-section {
   text-align: left;
-  font-size: 30px;
+  font-size: 1.875rem;
 }
 
 .github-button {
@@ -119,7 +119,7 @@ nav button:hover {
   border: none;
   border-radius: 50px;
   font-family: 'DM Sans', sans-serif;
-  font-size: 15px;
+  font-size: 0.9375rem;
   cursor: pointer;
   display: inline-block;
   transition: all 0.3s ease;
