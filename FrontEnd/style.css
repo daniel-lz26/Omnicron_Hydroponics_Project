@@ -38,6 +38,7 @@ header {
   width: 100%;
   max-width: 100vw;
   box-sizing: border-box;
+  z-index: 1000;
 }
 
 @media (max-width: 768px) {
